@@ -4,17 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portofolio Dinamis - Imam</title>
-    
-    <!-- Memuat Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Memuat Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
         .smooth-transition { transition: all 0.3s ease-in-out; }
         .content-section { display: none; }
         .content-section.active { display: block; }
@@ -29,29 +24,14 @@
         <div class="p-5">
             <h2 class="text-xl font-bold mb-8 text-cyan-400">Menu Navigasi</h2>
             <nav id="nav-menu" class="flex flex-col space-y-2">
-                <a href="#home" data-target="home" class="nav-link group flex items-center p-3 rounded-lg bg-indigo-800/60 font-semibold smooth-transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-cyan-400" viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" /></svg>
-                    Halaman Utama
-                </a>
-                <a href="#create" data-target="create" class="nav-link group flex items-center p-3 rounded-lg hover:bg-indigo-800/50 smooth-transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-cyan-400 group-hover:scale-110 smooth-transition" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
-                    <span class="group-hover:translate-x-1 smooth-transition">Create Link</span>
-                </a>
-                 <a href="#profile" data-target="profile" class="nav-link group flex items-center p-3 rounded-lg hover:bg-indigo-800/50 smooth-transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-cyan-400 group-hover:scale-110 smooth-transition" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" /></svg>
-                    <span class="group-hover:translate-x-1 smooth-transition">Profil</span>
-                </a>
-                <a href="#contact" data-target="contact" class="nav-link group flex items-center p-3 rounded-lg hover:bg-indigo-800/50 smooth-transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-cyan-400 group-hover:scale-110 smooth-transition" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" /></svg>
-                    <span class="group-hover:translate-x-1 smooth-transition">Hubungi Saya</span>
-                </a>
+                <a href="#home" data-target="home" class="nav-link group flex items-center p-3 rounded-lg bg-indigo-800/60 font-semibold smooth-transition"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-cyan-400" viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" /></svg>Halaman Utama</a>
+                <a href="#create" data-target="create" class="nav-link group flex items-center p-3 rounded-lg hover:bg-indigo-800/50 smooth-transition"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-cyan-400 group-hover:scale-110 smooth-transition" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg><span class="group-hover:translate-x-1 smooth-transition">Create Link</span></a>
+                <a href="#profile" data-target="profile" class="nav-link group flex items-center p-3 rounded-lg hover:bg-indigo-800/50 smooth-transition"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-cyan-400 group-hover:scale-110 smooth-transition" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" /></svg><span class="group-hover:translate-x-1 smooth-transition">Profil</span></a>
+                <a href="#contact" data-target="contact" class="nav-link group flex items-center p-3 rounded-lg hover:bg-indigo-800/50 smooth-transition"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-cyan-400 group-hover:scale-110 smooth-transition" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" /></svg><span class="group-hover:translate-x-1 smooth-transition">Hubungi Saya</span></a>
             </nav>
         </div>
         <div class="absolute bottom-0 left-0 w-full p-5 border-t border-indigo-800/50">
-             <a href="#about" data-target="about" class="nav-link group flex items-center p-2 rounded-lg hover:bg-indigo-800/50 smooth-transition">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-cyan-400 group-hover:scale-110 smooth-transition" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>
-                <span class="group-hover:translate-x-1 smooth-transition">Tentang Aplikasi v1.0.0</span>
-            </a>
+            <a href="#about" data-target="about" class="nav-link group flex items-center p-2 rounded-lg hover:bg-indigo-800/50 smooth-transition"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-cyan-400 group-hover:scale-110 smooth-transition" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg><span class="group-hover:translate-x-1 smooth-transition">Tentang Aplikasi v1.0.0</span></a>
         </div>
     </aside>
 
@@ -59,101 +39,17 @@
 
     <main id="main-content" class="w-full min-h-screen transition-transform duration-300 ease-in-out p-6 md:p-8">
         <header class="p-4 fixed top-0 left-0 z-20">
-             <button id="menu-btn" class="text-white p-2 rounded-full hover:bg-white/10 focus:outline-none smooth-transition hover:rotate-90">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-            </button>
+             <button id="menu-btn" class="text-white p-2 rounded-full hover:bg-white/10 focus:outline-none smooth-transition hover:rotate-90"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
         </header>
 
-        <section id="content-home" class="content-section active">
-            <div class="container mx-auto pt-16">
-                <h1 class="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500 mb-6">Semua Tautan</h1>
-                <div class="mb-8">
-                    <input type="text" id="search-input" placeholder="Cari berdasarkan judul atau deskripsi..." class="w-full p-3 bg-gray-800/50 border border-indigo-700 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:outline-none placeholder-gray-400">
-                </div>
-                <div id="links-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <p id="loading-indicator" class="col-span-full text-center">Memuat tautan...</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="content-create" class="content-section">
-            <div class="container mx-auto pt-16 max-w-2xl">
-                <h1 class="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500 mb-8">Buat Tautan Baru</h1>
-                <form id="create-link-form" class="space-y-6">
-                    <div>
-                        <label for="image-upload" class="block text-sm font-medium text-indigo-200 mb-2">Upload Gambar (Opsional)</label>
-                        <input type="file" id="image-upload" accept="image/*" class="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-cyan-500 file:text-white hover:file:bg-cyan-600">
-                        <img id="image-preview" src="" alt="Image Preview" class="mt-4 rounded-lg hidden max-h-40"/>
-                    </div>
-                    <div>
-                        <label for="title" class="block text-sm font-medium text-indigo-200 mb-2">Judul</label>
-                        <input type="text" id="title" required class="w-full p-3 bg-gray-800/50 border border-indigo-700 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:outline-none">
-                    </div>
-                     <div>
-                        <label for="description" class="block text-sm font-medium text-indigo-200 mb-2">Deskripsi</label>
-                        <textarea id="description" rows="4" required class="w-full p-3 bg-gray-800/50 border border-indigo-700 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:outline-none"></textarea>
-                    </div>
-                     <div>
-                        <label for="link" class="block text-sm font-medium text-indigo-200 mb-2">URL Tautan</label>
-                        <input type="url" id="link" required placeholder="https://example.com" class="w-full p-3 bg-gray-800/50 border border-indigo-700 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:outline-none">
-                    </div>
-                    <div>
-                        <button type="submit" id="submit-btn" class="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-bold py-3 px-4 rounded-lg smooth-transition">
-                            Simpan Tautan
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </section>
-
-        <section id="content-profile" class="content-section">
-             <div class="flex flex-col items-center justify-center min-h-screen text-center">
-                <img src="https://placehold.co/150x150/06b6d4/ffffff?text=I" alt="Foto Profil Imam" class="w-36 h-36 rounded-full border-4 border-cyan-400 shadow-lg shadow-cyan-500/20 mb-6">
-                <h1 class="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500">Selamat Datang, Imam!</h1>
-                <p class="text-lg text-indigo-200 mt-2">Web Developer & Creative Coder</p>
-            </div>
-        </section>
-
-        <section id="content-contact" class="content-section">
-             <div class="flex flex-col items-center justify-center min-h-screen text-center max-w-3xl mx-auto">
-                 <h1 class="text-4xl md:text-5xl font-bold text-cyan-400 mb-4">Hubungi Saya</h1>
-                 <p class="text-indigo-300 mb-10">Anda bisa menemukan dan menghubungi saya melalui platform berikut.</p>
-                 <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-                     <a href="https://tiktok.com/@username" target="_blank" rel="noopener noreferrer" class="group flex flex-col items-center space-y-2 text-gray-400 hover:text-cyan-400 smooth-transition">
-                         <svg class="w-12 h-12" role="img" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><title>TikTok</title><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-2.43.05-4.84-.95-6.43-2.8-1.59-1.87-2.32-4.45-2.1-7.15.07-1.09.36-2.15.81-3.14.77-1.6 2.16-2.8 3.86-3.56 1.41-.61 2.89-.9 4.39-.98.02 1.43.01 2.86.01 4.29-.93.12-1.86.38-2.73.78-.73.34-1.41.79-2.02 1.33-.61.53-1.04 1.2-1.33 1.94-.29.75-.42 1.58-.38 2.43.06.96.38 1.88.94 2.66.56.78 1.36 1.39 2.3 1.74.93.35 1.96.44 2.95.27.99-.17 1.92-.57 2.7-1.16.78-.59 1.39-1.36 1.74-2.28.23-.62.36-1.28.38-1.95.02-1.55.02-3.1.01-4.65z"/></svg>
-                         <span>TikTok</span>
-                     </a>
-                     <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" class="group flex flex-col items-center space-y-2 text-gray-400 hover:text-green-400 smooth-transition">
-                         <svg class="w-12 h-12" role="img" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><title>WhatsApp</title><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52s-.67-.816-.916-.966c-.247-.149-.496-.15-.67-.15h-.52c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871-.118.571-.355 1.758-1.44 2.03-1.761.271-.322.271-.599.198-.747zM12.001 2.002C6.486 2.002 2 6.487 2 12.001s4.486 10 10.001 10c5.514 0 10-4.486 10-10.001S17.515 2.002 12.001 2.002zM12 20.13c-4.488 0-8.13-3.643-8.13-8.13s3.642-8.13 8.13-8.13 8.13 3.643 8.13 8.13-3.642 8.13-8.13 8.13z"/></svg>
-                         <span>WhatsApp</span>
-                     </a>
-                     <a href="https://instagram.com/username" target="_blank" rel="noopener noreferrer" class="group flex flex-col items-center space-y-2 text-gray-400 hover:text-pink-400 smooth-transition">
-                         <svg class="w-12 h-12" role="img" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><title>Instagram</title><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.784.305-1.48.77-2.175 1.465C1.27 2.805.805 3.5.5 4.28c-.305.785-.497 1.66-.56 2.94-.055 1.28-.07 1.688-.07 4.78s.015 3.5.07 4.78c.063 1.28.255 2.155.56 2.94.305.78.77 1.475 1.465 2.175.7.7 1.39.165 2.175.47.785.305 1.66.497 2.94.56 1.28.055 1.688.07 4.78.07s3.5-.015 4.78-.07c1.28-.063 2.155-.255 2.94-.56.78-.305 1.475-.77 2.175-1.465.7-.7 1.165-1.39 1.465-2.175.305-.785.497-1.66.56-2.94.055-1.28.07-1.688.07-4.78s-.015-3.5-.07-4.78c-.063-1.28-.255-2.155-.56-2.94-.305-.78-.77-1.475-1.465-2.175C21.195 1.27 20.5 .805 19.72.5c-.785-.305-1.66-.497-2.94-.56C15.5.015 15.26 0 12 0zm0 2.16c3.2 0 3.585.012 4.85.07 1.17.055 1.805.245 2.225.4.575.225.98.48 1.48.98.5.5.755.905.98 1.48.155.42.345 1.055.4 2.225.06 1.265.07 1.65.07 4.85s-.01 3.585-.07 4.85c-.055 1.17-.245 1.805-.4 2.225-.225.575-.48.98-.98 1.48-.5.5-.905.755-1.48.98-.42.155-1.055.345-2.225.4-.1.06-1.65.07-4.85.07s-3.585-.01-4.85-.07c-1.17-.055-1.805-.245-2.225-.4-.575-.225-.98-.48-1.48-.98-.5-.5-.755-.905-.98-1.48-.155-.42-.345-1.055-.4-2.225C2.17 15.585 2.16 15.2 2.16 12s.01-3.585.07-4.85c.055-1.17.245-1.805.4-2.225.225-.575.48-.98.98-1.48.5-.5.905-.755 1.48-.98.42-.155 1.055.345 2.225-.4.06-1.265.07-1.65.07-4.85zm0 5.48c-1.935 0-3.5 1.565-3.5 3.5s1.565 3.5 3.5 3.5 3.5-1.565 3.5-3.5-1.565-3.5-3.5-3.5zm0 5.68c-1.195 0-2.18-1.985-2.18-2.18s.985-2.18 2.18-2.18 2.18.985 2.18 2.18-.985 2.18-2.18 2.18zm4.865-6.845c0 .71-.575 1.285-1.285 1.285s-1.285-.575-1.285-1.285.575-1.285 1.285-1.285 1.285.575 1.285 1.285z"/></svg>
-                         <span>Instagram</span>
-                     </a>
-                     <a href="https://facebook.com/username" target="_blank" rel="noopener noreferrer" class="group flex flex-col items-center space-y-2 text-gray-400 hover:text-blue-500 smooth-transition">
-                         <svg class="w-12 h-12" role="img" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><title>Facebook</title><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                         <span>Facebook</span>
-                     </a>
-                 </div>
-             </div>
-        </section>
-        
-        <section id="content-about" class="content-section">
-             <div class="flex flex-col items-center justify-center min-h-screen text-center max-w-3xl mx-auto">
-                 <h1 class="text-4xl md:text-5xl font-bold text-cyan-400 mb-4">Tentang Aplikasi v1.0.0</h1>
-                 <p class="text-indigo-300 leading-relaxed">Aplikasi ini adalah portofolio dinamis yang memungkinkan pengguna untuk membuat, melihat, dan mencari koleksi tautan. Dibuat dengan HTML, Tailwind CSS, dan dihubungkan dengan Google Firestore untuk penyimpanan data real-time, memungkinkan pengalaman yang interaktif dan kolaboratif.</p>
-             </div>
-        </section>
-
+        <section id="content-home" class="content-section active"><div class="container mx-auto pt-16"><h1 class="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500 mb-6">Semua Tautan</h1><div class="mb-8"><input type="text" id="search-input" placeholder="Cari berdasarkan judul atau deskripsi..." class="w-full p-3 bg-gray-800/50 border border-indigo-700 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:outline-none placeholder-gray-400"></div><div id="links-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"><p id="loading-indicator" class="col-span-full text-center">Menghubungkan ke database...</p></div></div></section>
+        <section id="content-create" class="content-section"><div class="container mx-auto pt-16 max-w-2xl"><h1 class="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500 mb-8">Buat Tautan Baru</h1><form id="create-link-form" class="space-y-6"><div><label for="image-upload" class="block text-sm font-medium text-indigo-200 mb-2">Upload Gambar (Opsional)</label><input type="file" id="image-upload" accept="image/*" class="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-cyan-500 file:text-white hover:file:bg-cyan-600"><img id="image-preview" src="" alt="Image Preview" class="mt-4 rounded-lg hidden max-h-40"/></div><div><label for="title" class="block text-sm font-medium text-indigo-200 mb-2">Judul</label><input type="text" id="title" required class="w-full p-3 bg-gray-800/50 border border-indigo-700 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:outline-none"></div><div><label for="description" class="block text-sm font-medium text-indigo-200 mb-2">Deskripsi</label><textarea id="description" rows="4" required class="w-full p-3 bg-gray-800/50 border border-indigo-700 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:outline-none"></textarea></div><div><label for="link" class="block text-sm font-medium text-indigo-200 mb-2">URL Tautan</label><input type="url" id="link" required placeholder="https://example.com" class="w-full p-3 bg-gray-800/50 border border-indigo-700 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:outline-none"></div><div><button type="submit" id="submit-btn" class="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-bold py-3 px-4 rounded-lg smooth-transition">Simpan Tautan</button></div></form></div></section>
+        <section id="content-profile" class="content-section"><div class="flex flex-col items-center justify-center min-h-screen text-center"><img src="https://placehold.co/150x150/06b6d4/ffffff?text=I" alt="Foto Profil Imam" class="w-36 h-36 rounded-full border-4 border-cyan-400 shadow-lg shadow-cyan-500/20 mb-6"><h1 class="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500">Selamat Datang, Imam!</h1><p class="text-lg text-indigo-200 mt-2">Web Developer & Creative Coder</p></div></section>
+        <section id="content-contact" class="content-section"><div class="flex flex-col items-center justify-center min-h-screen text-center max-w-3xl mx-auto"><h1 class="text-4xl md:text-5xl font-bold text-cyan-400 mb-4">Hubungi Saya</h1><p class="text-indigo-300 mb-10">Anda bisa menemukan dan menghubungi saya melalui platform berikut.</p><div class="grid grid-cols-2 md:grid-cols-4 gap-8"><a href="https://tiktok.com/@username" target="_blank" rel="noopener noreferrer" class="group flex flex-col items-center space-y-2 text-gray-400 hover:text-cyan-400 smooth-transition"><svg class="w-12 h-12" role="img" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><title>TikTok</title><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-2.43.05-4.84-.95-6.43-2.8-1.59-1.87-2.32-4.45-2.1-7.15.07-1.09.36-2.15.81-3.14.77-1.6 2.16-2.8 3.86-3.56 1.41-.61 2.89-.9 4.39-.98.02 1.43.01 2.86.01 4.29-.93.12-1.86.38-2.73.78-.73.34-1.41.79-2.02 1.33-.61.53-1.04 1.2-1.33 1.94-.29.75-.42 1.58-.38 2.43.06.96.38 1.88.94 2.66.56.78 1.36 1.39 2.3 1.74.93.35 1.96.44 2.95.27.99-.17 1.92-.57 2.7-1.16.78-.59 1.39-1.36 1.74-2.28.23-.62.36-1.28.38-1.95.02-1.55.02-3.1.01-4.65z"/></svg><span>TikTok</span></a><a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" class="group flex flex-col items-center space-y-2 text-gray-400 hover:text-green-400 smooth-transition"><svg class="w-12 h-12" role="img" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><title>WhatsApp</title><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52s-.67-.816-.916-.966c-.247-.149-.496-.15-.67-.15h-.52c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871-.118.571-.355 1.758-1.44 2.03-1.761.271-.322.271-.599.198-.747zM12.001 2.002C6.486 2.002 2 6.487 2 12.001s4.486 10 10.001 10c5.514 0 10-4.486 10-10.001S17.515 2.002 12.001 2.002zM12 20.13c-4.488 0-8.13-3.643-8.13-8.13s3.642-8.13 8.13-8.13 8.13 3.643 8.13 8.13-3.642 8.13-8.13 8.13z"/></svg><span>WhatsApp</span></a><a href="https://instagram.com/username" target="_blank" rel="noopener noreferrer" class="group flex flex-col items-center space-y-2 text-gray-400 hover:text-pink-400 smooth-transition"><svg class="w-12 h-12" role="img" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><title>Instagram</title><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.784.305-1.48.77-2.175 1.465C1.27 2.805.805 3.5.5 4.28c-.305.785-.497 1.66-.56 2.94-.055 1.28-.07 1.688-.07 4.78s.015 3.5.07 4.78c.063 1.28.255 2.155.56 2.94.305.78.77 1.475 1.465 2.175.7.7 1.39.165 2.175.47.785.305 1.66.497 2.94.56 1.28.055 1.688.07 4.78.07s3.5-.015 4.78-.07c1.28-.063 2.155-.255 2.94-.56.78-.305 1.475-.77 2.175-1.465.7-.7 1.165-1.39 1.465-2.175.305-.785.497-1.66.56-2.94.055-1.28.07-1.688.07-4.78s-.015-3.5-.07-4.78c-.063-1.28-.255-2.155-.56-2.94-.305-.78-.77-1.475-1.465-2.175C21.195 1.27 20.5 .805 19.72.5c-.785-.305-1.66-.497-2.94-.56C15.5.015 15.26 0 12 0zm0 2.16c3.2 0 3.585.012 4.85.07 1.17.055 1.805.245 2.225.4.575.225.98.48 1.48.98.5.5.755.905.98 1.48.155.42.345 1.055.4 2.225.06 1.265.07 1.65.07 4.85s-.01 3.585-.07 4.85c-.055 1.17-.245 1.805-.4 2.225-.225.575-.48.98-.98 1.48-.5.5-.905.755-1.48.98-.42.155-1.055.345-2.225.4-.1.06-1.65.07-4.85.07s-3.585-.01-4.85-.07c-1.17-.055-1.805-.245-2.225-.4-.575-.225-.98-.48-1.48-.98-.5-.5-.755-.905-.98-1.48-.155-.42-.345-1.055-.4-2.225C2.17 15.585 2.16 15.2 2.16 12s.01-3.585.07-4.85c.055-1.17.245-1.805.4-2.225.225-.575.48-.98.98-1.48.5-.5.905-.755 1.48-.98.42-.155 1.055.345 2.225-.4.06-1.265.07-1.65.07-4.85zm0 5.48c-1.935 0-3.5 1.565-3.5 3.5s1.565 3.5 3.5 3.5 3.5-1.565 3.5-3.5-1.565-3.5-3.5-3.5zm0 5.68c-1.195 0-2.18-1.985-2.18-2.18s.985-2.18 2.18-2.18 2.18.985 2.18 2.18-.985 2.18-2.18 2.18zm4.865-6.845c0 .71-.575 1.285-1.285 1.285s-1.285-.575-1.285-1.285.575-1.285 1.285-1.285 1.285.575 1.285 1.285z"/></svg><span>Instagram</span></a><a href="https://facebook.com/username" target="_blank" rel="noopener noreferrer" class="group flex flex-col items-center space-y-2 text-gray-400 hover:text-blue-500 smooth-transition"><svg class="w-12 h-12" role="img" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><title>Facebook</title><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg><span>Facebook</span></a></div></div></section>
+        <section id="content-about" class="content-section"><div class="flex flex-col items-center justify-center min-h-screen text-center max-w-3xl mx-auto"><h1 class="text-4xl md:text-5xl font-bold text-cyan-400 mb-4">Tentang Aplikasi v1.0.0</h1><p class="text-indigo-300 leading-relaxed">Aplikasi ini adalah portofolio dinamis yang memungkinkan pengguna untuk membuat, melihat, dan mencari koleksi tautan. Dibuat dengan HTML, Tailwind CSS, dan dihubungkan dengan Google Firestore untuk penyimpanan data real-time, memungkinkan pengalaman yang interaktif dan kolaboratif.</p></div></section>
     </main>
     
-    <div id="notification-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center">
-        <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-11/12 max-w-sm text-center">
-            <p id="notification-message" class="text-lg mb-4"></p>
-            <button id="close-notification" class="bg-cyan-500 text-white px-4 py-2 rounded-lg">Tutup</button>
-        </div>
-    </div>
+    <div id="notification-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center"><div class="bg-gray-800 rounded-lg shadow-xl p-6 w-11/12 max-w-sm text-center"><p id="notification-message" class="text-lg mb-4"></p><button id="close-notification" class="bg-cyan-500 text-white px-4 py-2 rounded-lg">Tutup</button></div></div>
 
     <!-- Firebase SDK -->
     <script type="module">
@@ -161,30 +57,34 @@
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // GANTI INI DENGAN KONFIGURASI FIREBASE MILIK ANDA
+        // GANTI INI DENGAN KONFIGURASI FIREBASE MILIK ANDA YANG ASLI
         const firebaseConfig = {
-        apiKey: "AIzaSyBv31cJC19G5Aoa5LTgaeXRdpN84z5TKsY",
-        authDomain: "imammulmu322.firebaseapp.com",
-        projectId: "imammulmu322",
-        storageBucket: "imammulmu322.firebasestorage.app",
-        messagingSenderId: "1048023716189",
-        appId: "1:1048023716189:web:e467f867fdd91c4ed518b4"
+          apiKey: "AIzaSyBv31cJC19pEpa6EpamkgaexRdpN0425TKsY",
+          authDomain: "imammulmu322.firebaseapp.com",
+          projectId: "imammulmu322",
+          storageBucket: "imammulmu322.appspot.com",
+          messagingSenderId: "1048023716109",
+          appId: "1:1048023716109:web:e467f867fdd9104ed518b4"
         };
 
         // --- Variabel Global ---
-        let db, auth;
         let allLinks = [];
-        const linksCollectionRef = collection(getFirestore(initializeApp(firebaseConfig)), "links");
+        let db;
 
         // --- Inisialisasi Aplikasi ---
         document.addEventListener('DOMContentLoaded', async () => {
             try {
-                auth = getAuth();
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                const auth = getAuth(app);
+                
                 await signInAnonymously(auth);
-                console.log("Pengguna terautentikasi:", auth.currentUser?.uid);
+                console.log("Pengguna berhasil login:", auth.currentUser?.uid);
+                
                 listenForLinks();
+                
             } catch(e) {
-                console.error("Error saat inisialisasi atau login:", e);
+                console.error("Error saat inisialisasi:", e);
                 document.getElementById('loading-indicator').innerText = "Gagal terhubung ke database. Cek koneksi & konfigurasi.";
             }
             setupEventListeners();
@@ -192,8 +92,11 @@
 
         // --- Fungsi untuk "mendengarkan" data dari Firestore ---
         function listenForLinks() {
+            const linksCollectionRef = collection(db, "links");
             const q = query(linksCollectionRef);
+            
             onSnapshot(q, (querySnapshot) => {
+                console.log("Data baru diterima dari Firestore!");
                 allLinks = [];
                 querySnapshot.forEach((doc) => {
                     allLinks.push({ id: doc.id, ...doc.data() });
@@ -255,11 +158,7 @@
             const navLinks = document.querySelectorAll('.nav-link');
             const contentSections = document.querySelectorAll('.content-section');
 
-            const toggleSidebar = () => {
-                sidebar.classList.toggle('-translate-x-full');
-                mainOverlay.classList.toggle('hidden');
-            };
-
+            const toggleSidebar = () => { sidebar.classList.toggle('-translate-x-full'); mainOverlay.classList.toggle('hidden'); };
             menuBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleSidebar(); });
             mainOverlay.addEventListener('click', toggleSidebar);
 
@@ -284,10 +183,7 @@
                 const file = imageUpload.files[0];
                 if (file) {
                     const reader = new FileReader();
-                    reader.onload = (e) => {
-                        imagePreview.src = e.target.result;
-                        imagePreview.classList.remove('hidden');
-                    }
+                    reader.onload = (e) => { imagePreview.src = e.target.result; imagePreview.classList.remove('hidden'); }
                     reader.readAsDataURL(file);
                 }
             });
@@ -307,6 +203,7 @@
                 };
 
                 try {
+                    const linksCollectionRef = collection(db, "links");
                     await addDoc(linksCollectionRef, newLink);
                     showNotification('Tautan berhasil disimpan!');
                     createLinkForm.reset();
@@ -325,25 +222,19 @@
             const searchInput = document.getElementById('search-input');
             searchInput.addEventListener('input', (e) => {
                 const searchTerm = e.target.value.toLowerCase();
-                const filteredLinks = allLinks.filter(link => 
-                    link.title.toLowerCase().includes(searchTerm) || 
-                    link.description.toLowerCase().includes(searchTerm)
-                );
+                const filteredLinks = allLinks.filter(link => link.title.toLowerCase().includes(searchTerm) || link.description.toLowerCase().includes(searchTerm));
                 renderLinks(filteredLinks);
             });
             
             // Modal
             const closeNotificationBtn = document.getElementById('close-notification');
-            closeNotificationBtn.addEventListener('click', () => {
-                 document.getElementById('notification-modal').style.display = 'none';
-            });
+            closeNotificationBtn.addEventListener('click', () => { document.getElementById('notification-modal').style.display = 'none'; });
         }
         
         function showNotification(message) {
             document.getElementById('notification-message').innerText = message;
             document.getElementById('notification-modal').style.display = 'flex';
         }
-
     </script>
 </body>
 </html>
