@@ -192,7 +192,14 @@
         // --- KONFIGURASI FIREBASE ---
         // Konfigurasi ini akan terisi secara otomatis di lingkungan yang mendukungnya.
         // Untuk penggunaan lokal atau di hosting lain, Anda perlu mengganti ini dengan konfigurasi asli dari project Firebase Anda.
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const firebaseConfig = {
+        apiKey: "AIzaSyBv31cJC19G5Aoa5LTgaeXRdpN84z5TKsY",
+        authDomain: "imammulmu322.firebaseapp.com",
+        projectId: "imammulmu322",
+        storageBucket: "imammulmu322.firebasestorage.app",
+        messagingSenderId: "1048023716189",
+        appId: "1:1048023716189:web:e467f867fdd91c4ed518b4"
+        };
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         
         let db, auth;
