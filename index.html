@@ -190,7 +190,7 @@
             if (docSnap.exists()) { showNotification("Nomor telepon sudah terdaftar.", true);
             } else {
                 await setDoc(userRef, {
-                    username: username, password: password, pin: pin, balance: 500000, createdAt: serverTimestamp()
+                    username: username, password: password, pin: pin, balance: 0, createdAt: serverTimestamp()
                 });
                 showNotification("Pendaftaran berhasil! Silakan login.");
                 document.getElementById('show-login-btn').click();
@@ -238,20 +238,21 @@
                 }
                 snapshot.forEach(doc => {
                     const tx = {id: doc.id, ...doc.data()};
+                    if(!tx.timestamp) return; // Lewati jika data belum lengkap
                     const date = tx.timestamp.toDate();
-                    const formattedDate = date.toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' });
+                    const formattedDate = date.toLocaleString('id-ID', { day: 'numeric', month: 'short', year:'numeric' });
                     const formattedAmount = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(tx.amount);
                     
                     let title, partyInfo, amountClass;
                     switch(tx.type) {
                         case 'MASUK':
                             title = 'Terima Dana';
-                            partyInfo = `Dari: ${tx.otherPartyName} (${tx.otherPartyPhone})`;
+                            partyInfo = `Dari: ${tx.otherPartyName}`;
                             amountClass = 'text-green-400';
                             break;
                         case 'KELUAR':
                             title = 'Transfer Keluar';
-                            partyInfo = `Ke: ${tx.otherPartyName} (${tx.otherPartyPhone})`;
+                            partyInfo = `Ke: ${tx.otherPartyName}`;
                             amountClass = 'text-red-400';
                             break;
                         case 'TOPUP':
@@ -271,7 +272,7 @@
                         </div>
                         <div class="text-right">
                             <p class="font-bold text-lg ${amountClass}">${tx.type === 'KELUAR' ? '-' : '+'} ${formattedAmount}</p>
-                            <p class="text-xs text-gray-500">${formattedDate.split(' ')[0]}</p>
+                            <p class="text-xs text-gray-500">${formattedDate}</p>
                         </div>`;
                     item.addEventListener('click', () => showHistoryDetail(tx));
                     historyList.appendChild(item);
@@ -334,15 +335,65 @@
             if (amount <= 0 || !amount) { showNotification("Jumlah transfer tidak valid.", true); return; }
             if (amount > currentUser.balance) { showNotification("Saldo tidak mencukupi.", true); return; }
             
-            currentTransaction = { recipientPhone, amount };
+            currentTransaction = { type: 'transfer', recipientPhone, amount };
             closeModal();
             openModal('pin-modal');
             document.getElementById('pin-input-hidden').focus();
         };
         
-        const executeTransfer = async () => { /* ... (fungsi sama, tidak perlu diubah) ... */ };
+        const executeTransfer = async () => {
+            try {
+                const transactionId = `TRX-${Date.now()}`;
+                const merchantOrderId = `ORDER-${crypto.randomUUID().slice(0, 8)}`;
+                
+                await runTransaction(db, async (transaction) => {
+                    const senderRef = doc(db, "users", currentUser.phoneNumber);
+                    const recipientRef = doc(db, "users", currentTransaction.recipientPhone);
+                    
+                    const senderDoc = await transaction.get(senderRef);
+                    const recipientDoc = await transaction.get(recipientRef);
+
+                    if (!senderDoc.exists()) throw "Pengirim tidak ditemukan.";
+                    if (!recipientDoc.exists()) throw "Penerima tidak ditemukan.";
+                    
+                    const senderData = senderDoc.data();
+                    const newSenderBalance = senderData.balance - currentTransaction.amount;
+                    if (newSenderBalance < 0) throw "Saldo tidak mencukupi.";
+                    
+                    const recipientData = recipientDoc.data();
+                    const newRecipientBalance = recipientData.balance + currentTransaction.amount;
+
+                    transaction.update(senderRef, { balance: newSenderBalance });
+                    transaction.update(recipientRef, { balance: newRecipientBalance });
+                    
+                    const senderHistoryRef = doc(collection(db, "users", currentUser.phoneNumber, "history"));
+                    transaction.set(senderHistoryRef, { type: 'KELUAR', amount: currentTransaction.amount, timestamp: serverTimestamp(), transactionId, merchantOrderId, otherPartyName: recipientData.username, otherPartyPhone: currentTransaction.recipientPhone });
+
+                    const recipientHistoryRef = doc(collection(db, "users", currentTransaction.recipientPhone, "history"));
+                    transaction.set(recipientHistoryRef, { type: 'MASUK', amount: currentTransaction.amount, timestamp: serverTimestamp(), transactionId, merchantOrderId, otherPartyName: senderData.username, otherPartyPhone: currentUser.phoneNumber });
+                });
+                showNotification("Transfer berhasil!");
+            } catch (error) {
+                console.error("Transfer gagal: ", error);
+                showNotification(`Transfer gagal: ${error}`, true);
+            }
+        };
         
-        const handlePinInput = async (pin) => { /* ... (fungsi sama, tidak perlu diubah) ... */ };
+        const handlePinInput = async (pin) => {
+            if (pin === currentUser.pin) {
+                document.getElementById('pin-error').innerText = '';
+                closeModal();
+                showNotification("PIN Benar! Memproses...");
+                if (currentTransaction.type === 'transfer') {
+                    await executeTransfer();
+                }
+            } else {
+                const pinDots = document.getElementById('pin-dots-container');
+                pinDots.classList.add('shake');
+                document.getElementById('pin-error').innerText = 'PIN salah!';
+                setTimeout(() => pinDots.classList.remove('shake'), 300);
+            }
+        };
 
         const handleTopupSubmit = async (e) => {
             e.preventDefault();
