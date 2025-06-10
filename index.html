@@ -14,28 +14,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-        .smooth-transition {
-            transition: all 0.3s ease-in-out;
-        }
-        .content-section {
-            display: none; /* Semua section disembunyikan secara default */
-        }
-        .content-section.active {
-            display: block; /* Section yang aktif akan ditampilkan */
-        }
-        /* Animasi untuk kartu */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .card-animation {
-            animation: fadeIn 0.5s ease-out forwards;
-        }
+        body { font-family: 'Inter', sans-serif; }
+        .smooth-transition { transition: all 0.3s ease-in-out; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .card-animation { animation: fadeIn 0.5s ease-out forwards; }
     </style>
 </head>
 <body class="bg-gradient-to-br from-gray-900 via-indigo-900 to-purple-900 text-gray-200 overflow-x-hidden">
@@ -58,9 +42,7 @@
                     <span class="group-hover:translate-x-1 smooth-transition">Profil</span>
                 </a>
                 <a href="#contact" data-target="contact" class="nav-link group flex items-center p-3 rounded-lg hover:bg-indigo-800/50 smooth-transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-cyan-400 group-hover:scale-110 smooth-transition" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-cyan-400 group-hover:scale-110 smooth-transition" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" /></svg>
                     <span class="group-hover:translate-x-1 smooth-transition">Hubungi Saya</span>
                 </a>
             </nav>
@@ -82,9 +64,6 @@
             </button>
         </header>
 
-        <!-- === KONTEN DINAMIS DIMULAI DI SINI === -->
-        
-        <!-- Halaman Utama (Home) -->
         <section id="content-home" class="content-section active">
             <div class="container mx-auto pt-16">
                 <h1 class="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500 mb-6">Semua Tautan</h1>
@@ -92,12 +71,11 @@
                     <input type="text" id="search-input" placeholder="Cari berdasarkan judul atau deskripsi..." class="w-full p-3 bg-gray-800/50 border border-indigo-700 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:outline-none placeholder-gray-400">
                 </div>
                 <div id="links-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <p id="loading-indicator">Memuat tautan...</p>
+                    <p id="loading-indicator" class="col-span-full text-center">Memuat tautan...</p>
                 </div>
             </div>
         </section>
 
-        <!-- Halaman Buat Tautan (Create) -->
         <section id="content-create" class="content-section">
             <div class="container mx-auto pt-16 max-w-2xl">
                 <h1 class="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500 mb-8">Buat Tautan Baru</h1>
@@ -128,7 +106,6 @@
             </div>
         </section>
 
-        <!-- Halaman Profil -->
         <section id="content-profile" class="content-section">
              <div class="flex flex-col items-center justify-center min-h-screen text-center">
                 <img src="https://placehold.co/150x150/06b6d4/ffffff?text=I" alt="Foto Profil Imam" class="w-36 h-36 rounded-full border-4 border-cyan-400 shadow-lg shadow-cyan-500/20 mb-6">
@@ -137,13 +114,11 @@
             </div>
         </section>
 
-        <!-- Halaman Kontak -->
         <section id="content-contact" class="content-section">
              <div class="flex flex-col items-center justify-center min-h-screen text-center max-w-3xl mx-auto">
                  <h1 class="text-4xl md:text-5xl font-bold text-cyan-400 mb-4">Hubungi Saya</h1>
                  <p class="text-indigo-300 mb-10">Anda bisa menemukan dan menghubungi saya melalui platform berikut.</p>
                  <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-                     <!-- GANTI 'USERNAME' DAN NOMOR DENGAN MILIK ANDA -->
                      <a href="https://tiktok.com/@username" target="_blank" rel="noopener noreferrer" class="group flex flex-col items-center space-y-2 text-gray-400 hover:text-cyan-400 smooth-transition">
                          <svg class="w-12 h-12" role="img" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><title>TikTok</title><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-2.43.05-4.84-.95-6.43-2.8-1.59-1.87-2.32-4.45-2.1-7.15.07-1.09.36-2.15.81-3.14.77-1.6 2.16-2.8 3.86-3.56 1.41-.61 2.89-.9 4.39-.98.02 1.43.01 2.86.01 4.29-.93.12-1.86.38-2.73.78-.73.34-1.41.79-2.02 1.33-.61.53-1.04 1.2-1.33 1.94-.29.75-.42 1.58-.38 2.43.06.96.38 1.88.94 2.66.56.78 1.36 1.39 2.3 1.74.93.35 1.96.44 2.95.27.99-.17 1.92-.57 2.7-1.16.78-.59 1.39-1.36 1.74-2.28.23-.62.36-1.28.38-1.95.02-1.55.02-3.1.01-4.65z"/></svg>
                          <span>TikTok</span>
@@ -163,18 +138,16 @@
                  </div>
              </div>
         </section>
-
-        <!-- Halaman Tentang -->
+        
         <section id="content-about" class="content-section">
              <div class="flex flex-col items-center justify-center min-h-screen text-center max-w-3xl mx-auto">
                  <h1 class="text-4xl md:text-5xl font-bold text-cyan-400 mb-4">Tentang Aplikasi v1.0.0</h1>
                  <p class="text-indigo-300 leading-relaxed">Aplikasi ini adalah portofolio dinamis yang memungkinkan pengguna untuk membuat, melihat, dan mencari koleksi tautan. Dibuat dengan HTML, Tailwind CSS, dan dihubungkan dengan Google Firestore untuk penyimpanan data real-time, memungkinkan pengalaman yang interaktif dan kolaboratif.</p>
              </div>
         </section>
-        
+
     </main>
     
-    <!-- Modal Notifikasi -->
     <div id="notification-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center">
         <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-11/12 max-w-sm text-center">
             <p id="notification-message" class="text-lg mb-4"></p>
@@ -182,16 +155,13 @@
         </div>
     </div>
 
-
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- KONFIGURASI FIREBASE ---
-        // Konfigurasi ini akan terisi secara otomatis di lingkungan yang mendukungnya.
-        // Untuk penggunaan lokal atau di hosting lain, Anda perlu mengganti ini dengan konfigurasi asli dari project Firebase Anda.
+        // GANTI INI DENGAN KONFIGURASI FIREBASE MILIK ANDA
         const firebaseConfig = {
         apiKey: "AIzaSyBv31cJC19G5Aoa5LTgaeXRdpN84z5TKsY",
         authDomain: "imammulmu322.firebaseapp.com",
@@ -200,66 +170,46 @@
         messagingSenderId: "1048023716189",
         appId: "1:1048023716189:web:e467f867fdd91c4ed518b4"
         };
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        
+
+        // --- Variabel Global ---
         let db, auth;
-        let allLinks = []; // Array untuk menyimpan semua link dari firestore
+        let allLinks = [];
+        const linksCollectionRef = collection(getFirestore(initializeApp(firebaseConfig)), "links");
 
-        // Inisialisasi Firebase
-        try {
-            const app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
-            console.log("Firebase berhasil diinisialisasi.");
-            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                await signInWithCustomToken(auth, __initial_auth_token);
-            } else {
+        // --- Inisialisasi Aplikasi ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                auth = getAuth();
                 await signInAnonymously(auth);
+                console.log("Pengguna terautentikasi:", auth.currentUser?.uid);
+                listenForLinks();
+            } catch(e) {
+                console.error("Error saat inisialisasi atau login:", e);
+                document.getElementById('loading-indicator').innerText = "Gagal terhubung ke database. Cek koneksi & konfigurasi.";
             }
-            console.log("Pengguna terautentikasi:", auth.currentUser?.uid);
-            listenForLinks();
-        } catch(e) {
-            console.error("Error inisialisasi Firebase: ", e);
-            document.getElementById('loading-indicator').innerText = "Gagal terhubung ke database. Pastikan konfigurasi Firebase benar.";
-        }
-       
-        const linksCollection = collection(db, `/artifacts/${appId}/public/data/links`);
-
-        // --- FUNGSI TAMPILAN (UI) & NAVIGASI ---
-        const menuBtn = document.getElementById('menu-btn');
-        const sidebar = document.getElementById('sidebar');
-        const mainOverlay = document.getElementById('main-overlay');
-        const navLinks = document.querySelectorAll('.nav-link');
-        const contentSections = document.querySelectorAll('.content-section');
-
-        const toggleSidebar = () => {
-            sidebar.classList.toggle('-translate-x-full');
-            mainOverlay.classList.toggle('hidden');
-        };
-
-        menuBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleSidebar();
+            setupEventListeners();
         });
-        mainOverlay.addEventListener('click', toggleSidebar);
 
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetId = link.getAttribute('data-target');
-                contentSections.forEach(section => section.classList.remove('active'));
-                document.getElementById(`content-${targetId}`).classList.add('active');
-                navLinks.forEach(nav => nav.classList.remove('bg-indigo-800/60', 'font-semibold'));
-                link.classList.add('bg-indigo-800/60', 'font-semibold');
-                if (window.innerWidth < 768) { // Otomatis tutup di mobile
-                  toggleSidebar();
-                }
+        // --- Fungsi untuk "mendengarkan" data dari Firestore ---
+        function listenForLinks() {
+            const q = query(linksCollectionRef);
+            onSnapshot(q, (querySnapshot) => {
+                allLinks = [];
+                querySnapshot.forEach((doc) => {
+                    allLinks.push({ id: doc.id, ...doc.data() });
+                });
+                allLinks.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+                renderLinks(allLinks);
+            }, (error) => {
+                 console.error("Error mengambil data:", error);
+                 document.getElementById('loading-indicator').innerText = "Gagal mengambil data dari database.";
             });
-        });
-
-        // --- FUNGSI LINK (CRUD & RENDER) ---
+        }
+        
+        // --- Fungsi untuk menampilkan kartu link ---
         function renderLinks(linksToRender) {
             const container = document.getElementById('links-container');
+            const searchInput = document.getElementById('search-input');
             container.innerHTML = ''; 
 
             if (linksToRender.length === 0) {
@@ -296,96 +246,103 @@
             });
         }
         
-        function listenForLinks() {
-            const q = query(collection(db, `/artifacts/${appId}/public/data/links`));
-            onSnapshot(q, (querySnapshot) => {
-                allLinks = [];
-                querySnapshot.forEach((doc) => {
-                    allLinks.push({ id: doc.id, ...doc.data() });
+        // --- Setup semua event listener ---
+        function setupEventListeners() {
+            // Navigasi
+            const menuBtn = document.getElementById('menu-btn');
+            const sidebar = document.getElementById('sidebar');
+            const mainOverlay = document.getElementById('main-overlay');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const contentSections = document.querySelectorAll('.content-section');
+
+            const toggleSidebar = () => {
+                sidebar.classList.toggle('-translate-x-full');
+                mainOverlay.classList.toggle('hidden');
+            };
+
+            menuBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleSidebar(); });
+            mainOverlay.addEventListener('click', toggleSidebar);
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('data-target');
+                    contentSections.forEach(section => section.classList.remove('active'));
+                    document.getElementById(`content-${targetId}`).classList.add('active');
+                    navLinks.forEach(nav => nav.classList.remove('bg-indigo-800/60', 'font-semibold'));
+                    link.classList.add('bg-indigo-800/60', 'font-semibold');
+                    if (window.innerWidth < 768) { toggleSidebar(); }
                 });
-                allLinks.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-                // Terapkan filter pencarian saat data baru masuk
-                const searchTerm = searchInput.value.toLowerCase();
+            });
+
+            // Form
+            const createLinkForm = document.getElementById('create-link-form');
+            const imageUpload = document.getElementById('image-upload');
+            const imagePreview = document.getElementById('image-preview');
+
+            imageUpload.addEventListener('change', () => {
+                const file = imageUpload.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        imagePreview.src = e.target.result;
+                        imagePreview.classList.remove('hidden');
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            createLinkForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const submitBtn = document.getElementById('submit-btn');
+                submitBtn.disabled = true;
+                submitBtn.innerText = 'Menyimpan...';
+
+                const newLink = {
+                    title: document.getElementById('title').value,
+                    description: document.getElementById('description').value,
+                    link: document.getElementById('link').value,
+                    image: imagePreview.classList.contains('hidden') ? null : imagePreview.src,
+                    createdAt: serverTimestamp()
+                };
+
+                try {
+                    await addDoc(linksCollectionRef, newLink);
+                    showNotification('Tautan berhasil disimpan!');
+                    createLinkForm.reset();
+                    imagePreview.classList.add('hidden');
+                    document.querySelector('.nav-link[data-target="home"]').click();
+                } catch (error) {
+                    console.error("Error menambahkan dokumen:", error);
+                    showNotification('Gagal menyimpan tautan.');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = 'Simpan Tautan';
+                }
+            });
+
+            // Search
+            const searchInput = document.getElementById('search-input');
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
                 const filteredLinks = allLinks.filter(link => 
                     link.title.toLowerCase().includes(searchTerm) || 
                     link.description.toLowerCase().includes(searchTerm)
                 );
                 renderLinks(filteredLinks);
-            }, (error) => {
-                 console.error("Error mengambil data: ", error);
-                 document.getElementById('loading-indicator').innerText = "Gagal mengambil data. Cek koneksi internet.";
+            });
+            
+            // Modal
+            const closeNotificationBtn = document.getElementById('close-notification');
+            closeNotificationBtn.addEventListener('click', () => {
+                 document.getElementById('notification-modal').style.display = 'none';
             });
         }
-
-        // --- EVENT LISTENERS FORM & SEARCH ---
-        const createLinkForm = document.getElementById('create-link-form');
-        const imageUpload = document.getElementById('image-upload');
-        const imagePreview = document.getElementById('image-preview');
-        const searchInput = document.getElementById('search-input');
-
-        imageUpload.addEventListener('change', () => {
-            const file = imageUpload.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    imagePreview.src = e.target.result;
-                    imagePreview.classList.remove('hidden');
-                }
-                reader.readAsDataURL(file);
-            }
-        });
         
-        createLinkForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const submitBtn = document.getElementById('submit-btn');
-            submitBtn.disabled = true;
-            submitBtn.innerText = 'Menyimpan...';
-
-            const newLink = {
-                title: document.getElementById('title').value,
-                description: document.getElementById('description').value,
-                link: document.getElementById('link').value,
-                image: imagePreview.classList.contains('hidden') ? null : imagePreview.src,
-                createdAt: serverTimestamp()
-            };
-
-            try {
-                await addDoc(linksCollection, newLink);
-                showNotification('Tautan berhasil disimpan!');
-                createLinkForm.reset();
-                imagePreview.classList.add('hidden');
-                document.querySelector('.nav-link[data-target="home"]').click();
-            } catch (error) {
-                console.error("Error menambahkan dokumen: ", error);
-                showNotification('Gagal menyimpan tautan.');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerText = 'Simpan Tautan';
-            }
-        });
-
-        searchInput.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            const filteredLinks = allLinks.filter(link => 
-                link.title.toLowerCase().includes(searchTerm) || 
-                link.description.toLowerCase().includes(searchTerm)
-            );
-            renderLinks(filteredLinks);
-        });
-        
-        // --- MODAL NOTIFIKASI ---
-        const notificationModal = document.getElementById('notification-modal');
-        const notificationMessage = document.getElementById('notification-message');
-        const closeNotificationBtn = document.getElementById('close-notification');
-
         function showNotification(message) {
-            notificationMessage.innerText = message;
-            notificationModal.style.display = 'flex';
+            document.getElementById('notification-message').innerText = message;
+            document.getElementById('notification-modal').style.display = 'flex';
         }
-
-        closeNotificationBtn.addEventListener('click', () => {
-             notificationModal.style.display = 'none';
-        });
 
     </script>
 </body>
