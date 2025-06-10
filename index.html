@@ -222,6 +222,7 @@
                 e.target.reset();
             }
         };
+
         const handleLogin = async (e) => {
             e.preventDefault();
             const phone = document.getElementById('login-phone').value;
@@ -236,6 +237,7 @@
                 } else { showNotification("Password salah.", true); }
             } else { showNotification("Nomor telepon tidak ditemukan.", true); }
         };
+
         const handleLogout = () => {
             if (unsubscribeUser) unsubscribeUser();
             if (unsubscribeHistory) unsubscribeHistory();
@@ -266,6 +268,7 @@
                 isInitialHistoryLoad = false;
             });
         };
+
         const renderHistory = (historyData) => {
             const historyList = document.getElementById('history-list');
             if (!historyList) return;
@@ -319,13 +322,118 @@
             document.getElementById('profile-money-out').textContent = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(totalOut);
         };
 
-        const showHistoryDetail = (tx) => { /* ... (fungsi sama) ... */ };
+        const showHistoryDetail = (tx) => {
+            const date = tx.timestamp.toDate();
+            const formattedDate = date.toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' });
+            const formattedAmount = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(tx.amount);
+            let statusText, statusClass;
+            switch(tx.type) {
+                case 'MASUK': case 'KELUAR': case 'TOPUP': statusText = 'BERHASIL'; statusClass = 'text-green-400'; break;
+                default: statusText = 'TIDAK DIKETAHUI'; statusClass = 'text-gray-400';
+            }
+            document.getElementById('detail-status').textContent = statusText;
+            document.getElementById('detail-status').className = `font-semibold ${statusClass}`;
+            document.getElementById('detail-datetime').textContent = formattedDate;
+            document.getElementById('detail-amount').textContent = formattedAmount;
+            document.getElementById('detail-txid').textContent = tx.transactionId;
+            const senderBlock = document.getElementById('detail-sender-block');
+            const recipientBlock = document.getElementById('detail-recipient-block');
+            const orderBlock = document.getElementById('detail-order-block');
+            senderBlock.style.display = 'none'; recipientBlock.style.display = 'none'; orderBlock.style.display = 'none';
+            if(tx.type === 'KELUAR' || tx.type === 'MASUK') {
+                senderBlock.style.display = 'flex'; recipientBlock.style.display = 'flex'; orderBlock.style.display = 'flex';
+                const senderName = tx.type === 'KELUAR' ? currentUser.username : tx.otherPartyName;
+                const senderPhone = tx.type === 'KELUAR' ? currentUser.phoneNumber : tx.otherPartyPhone;
+                const recipientName = tx.type === 'KELUAR' ? tx.otherPartyName : currentUser.username;
+                const recipientPhone = tx.type === 'KELUAR' ? tx.otherPartyPhone : currentUser.phoneNumber;
+                document.getElementById('detail-sender').innerHTML = `${senderName}<br><span class="text-xs text-gray-400">${senderPhone}</span>`;
+                document.getElementById('detail-recipient').innerHTML = `${recipientName}<br><span class="text-xs text-gray-400">${recipientPhone}</span>`;
+                document.getElementById('detail-orderid').textContent = tx.merchantOrderId;
+            }
+            openModal('history-detail-modal');
+        };
         
         // --- Fungsi Transaksi ---
-        const handleTransferSubmit = (e) => { /* ... (fungsi sama) ... */ };
-        const executeTransfer = async () => { /* ... (fungsi sama) ... */ };
-        const handlePinInput = async (pin) => { /* ... (fungsi sama) ... */ };
-        const handleTopupSubmit = async (e) => { /* ... (fungsi sama) ... */ };
+        const handleTransferSubmit = (e) => {
+            e.preventDefault();
+            const recipientPhone = document.getElementById('recipient-phone').value;
+            const amount = parseInt(document.getElementById('transfer-amount').value);
+            if (recipientPhone === currentUser.phoneNumber) { showNotification("Tidak bisa transfer ke diri sendiri.", true); return; }
+            if (amount <= 0 || !amount) { showNotification("Jumlah transfer tidak valid.", true); return; }
+            if (amount > currentUser.balance) { showNotification("Saldo tidak mencukupi.", true); return; }
+            currentTransaction = { type: 'transfer', recipientPhone, amount };
+            closeModal();
+            openModal('pin-modal');
+            document.getElementById('pin-input-hidden').focus();
+        };
+
+        const executeTransfer = async () => {
+            try {
+                const transactionId = `TRX-${Date.now()}`;
+                const merchantOrderId = `ORDER-${crypto.randomUUID().slice(0, 8)}`;
+                await runTransaction(db, async (transaction) => {
+                    const senderRef = doc(db, "users", currentUser.phoneNumber);
+                    const recipientRef = doc(db, "users", currentTransaction.recipientPhone);
+                    const senderDoc = await transaction.get(senderRef);
+                    const recipientDoc = await transaction.get(recipientRef);
+                    if (!senderDoc.exists()) throw "Pengirim tidak ditemukan.";
+                    if (!recipientDoc.exists()) throw "Penerima tidak ditemukan.";
+                    const senderData = senderDoc.data();
+                    const newSenderBalance = senderData.balance - currentTransaction.amount;
+                    if (newSenderBalance < 0) throw "Saldo tidak mencukupi.";
+                    const recipientData = recipientDoc.data();
+                    const newRecipientBalance = recipientData.balance + currentTransaction.amount;
+                    transaction.update(senderRef, { balance: newSenderBalance });
+                    transaction.update(recipientRef, { balance: newRecipientBalance });
+                    const senderHistoryRef = doc(collection(db, "users", currentUser.phoneNumber, "history"));
+                    transaction.set(senderHistoryRef, { type: 'KELUAR', amount: currentTransaction.amount, timestamp: serverTimestamp(), transactionId, merchantOrderId, otherPartyName: recipientData.username, otherPartyPhone: currentTransaction.recipientPhone });
+                    const recipientHistoryRef = doc(collection(db, "users", currentTransaction.recipientPhone, "history"));
+                    transaction.set(recipientHistoryRef, { type: 'MASUK', amount: currentTransaction.amount, timestamp: serverTimestamp(), transactionId, merchantOrderId, otherPartyName: senderData.username, otherPartyPhone: currentUser.phoneNumber });
+                });
+                showNotification("Transfer berhasil!");
+            } catch (error) {
+                console.error("Transfer gagal: ", error);
+                showNotification(`Transfer gagal: ${error}`, true);
+            }
+        };
+
+        const handlePinInput = async (pin) => {
+            if (pin === currentUser.pin) {
+                document.getElementById('pin-error').innerText = '';
+                closeModal();
+                showNotification("PIN Benar! Memproses...");
+                if (currentTransaction.type === 'transfer') {
+                    await executeTransfer();
+                }
+            } else {
+                const pinDots = document.getElementById('pin-dots-container');
+                pinDots.classList.add('shake');
+                document.getElementById('pin-error').innerText = 'PIN salah!';
+                document.getElementById('pin-modal-close-btn').classList.remove('hidden');
+                setTimeout(() => pinDots.classList.remove('shake'), 300);
+            }
+        };
+
+        const handleTopupSubmit = async (e) => {
+            e.preventDefault();
+            const amount = parseInt(document.getElementById('topup-amount').value);
+            if (amount <= 0 || !amount) { showNotification("Jumlah top up tidak valid.", true); return; }
+            try {
+                await runTransaction(db, async (transaction) => {
+                    const userRef = doc(db, "users", currentUser.phoneNumber);
+                    const userDoc = await transaction.get(userRef);
+                    if (!userDoc.exists()) throw "Pengguna tidak ditemukan.";
+                    const newBalance = userDoc.data().balance + amount;
+                    transaction.update(userRef, { balance: newBalance });
+                    const historyRef = doc(collection(db, "users", currentUser.phoneNumber, "history"));
+                    transaction.set(historyRef, {
+                        type: 'TOPUP', amount: amount, timestamp: serverTimestamp(), transactionId: `TOPUP-${Date.now()}`
+                    });
+                });
+                showNotification("Top up berhasil!");
+                closeModal();
+            } catch(error) { showNotification(`Top up gagal: ${error}`, true); }
+        };
 
         // --- Inisialisasi Event Listeners ---
         document.addEventListener('DOMContentLoaded', () => {
@@ -335,6 +443,7 @@
                 auth = getAuth(app);
                 signInAnonymously(auth);
             } catch (e) { console.error("Gagal konek Firebase:", e); alert("Gagal terhubung ke Firebase. Cek konfigurasi."); }
+
             document.getElementById('show-register-btn').addEventListener('click', () => {
                 document.getElementById('login-view').classList.add('hidden');
                 document.getElementById('register-view').classList.remove('hidden');
@@ -343,19 +452,26 @@
                 document.getElementById('login-view').classList.remove('hidden');
                 document.getElementById('register-view').classList.add('hidden');
             });
+
             document.getElementById('register-form').addEventListener('submit', handleRegister);
             document.getElementById('login-form').addEventListener('submit', handleLogin);
+            
             document.querySelectorAll('.modal-close-btn').forEach(btn => btn.addEventListener('click', closeModal));
             document.getElementById('pin-modal-close-btn').addEventListener('click', closeModal);
+
             document.getElementById('pin-input-hidden').addEventListener('input', (e) => {
                 const pin = e.target.value;
                 const dots = document.querySelectorAll('#pin-dots-container .pin-dot');
                 dots.forEach((dot, index) => { dot.classList.toggle('filled', index < pin.length); });
                 if (pin.length === 6) { handlePinInput(pin); e.target.value = ''; }
             });
+            
             document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.addEventListener('click', () => { showMainAppView(btn.dataset.target); });
+                btn.addEventListener('click', () => {
+                    showMainAppView(btn.dataset.target);
+                });
             });
+
             document.getElementById('key-form').addEventListener('submit', (e) => {
                 e.preventDefault();
                 const key = document.getElementById('access-key').value;
@@ -363,6 +479,7 @@
                 else { showNotification('Kunci Akses salah!', true); }
                 e.target.reset();
             });
+
             document.getElementById('transfer-form').addEventListener('submit', handleTransferSubmit);
             document.getElementById('topup-form').addEventListener('submit', handleTopupSubmit);
         });
