@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Link Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            -webkit-font-smoothing: antialiased; 
+            -moz-osx-font-smoothing: grayscale;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1e293b 0%, #1e40af 50%, #7e22ce 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.05); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 1rem;
+        }
+        .smooth-transition { transition: all 0.3s ease-in-out; }
+        .category-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .link-item {
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        .link-item:hover {
+            border-left-color: #67e8f9;
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .bg-bubbles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .bg-bubbles li {
+            position: absolute;
+            list-style: none;
+            display: block;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            bottom: -160px;
+            animation: square 25s infinite;
+            transition-timing-function: linear;
+            border-radius: 5px;
+        }
+        /* Animasi bubble positions */
+        .bg-bubbles li:nth-child(1) { left: 10%; }
+        .bg-bubbles li:nth-child(2) { left: 20%; width: 80px; height: 80px; animation-delay: 2s; animation-duration: 17s; }
+        .bg-bubbles li:nth-child(3) { left: 25%; animation-delay: 4s; }
+        .bg-bubbles li:nth-child(4) { left: 40%; width: 60px; height: 60px; animation-duration: 22s; background-color: rgba(255, 255, 255, 0.2); }
+        .bg-bubbles li:nth-child(5) { left: 70%; }
+        .bg-bubbles li:nth-child(6) { left: 80%; width: 120px; height: 120px; animation-delay: 3s; background-color: rgba(255, 255, 255, 0.15); }
+        
+        @keyframes square {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-1080px) rotate(720deg); opacity: 0; }
+        }
+        
+        /* Loading spinner */
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Latar Belakang Animasi -->
+    <ul class="bg-bubbles">
+        <li></li><li></li><li></li><li></li><li></li><li></li>
+    </ul>
+
+    <div class="container mx-auto px-4 py-8 relative z-10 max-w-6xl">
+        <header class="mb-8 text-center">
+            <h1 class="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Link Manager</h1>
+            <p class="text-gray-400 mt-2">Kelola link APK, Module, dan Root Anda</p>
+        </header>
+        
+        <!-- Kategori -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- APK Card -->
+            <div class="glass-card category-card p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-cyan-300">APK</h2>
+                    <button id="add-apk-btn" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 rounded-lg text-sm font-medium smooth-transition">
+                        + Tambah
+                    </button>
+                </div>
+                <div id="apk-links" class="space-y-3 min-h-[100px]"></div>
+            </div>
+            
+            <!-- Module Card -->
+            <div class="glass-card category-card p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-emerald-300">Module</h2>
+                    <button id="add-module-btn" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 rounded-lg text-sm font-medium smooth-transition">
+                        + Tambah
+                    </button>
+                </div>
+                <div id="module-links" class="space-y-3 min-h-[100px]"></div>
+            </div>
+            
+            <!-- Root Card -->
+            <div class="glass-card category-card p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-rose-300">Root</h2>
+                    <button id="add-root-btn" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 rounded-lg text-sm font-medium smooth-transition">
+                        + Tambah
+                    </button>
+                </div>
+                <div id="root-links" class="space-y-3 min-h-[100px]"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Create Link -->
+    <div id="createModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-6 rounded-2xl shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modalTitle" class="text-xl font-bold">Tambah Link Baru</h3>
+                <button id="closeModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <form id="linkForm" class="space-y-4">
+                <input type="hidden" id="categoryInput">
+                <div>
+                    <label for="titleInput" class="block text-sm font-medium text-gray-300 mb-1">Judul*</label>
+                    <input type="text" id="titleInput" required 
+                        class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:border-transparent placeholder-gray-500">
+                    <p id="titleError" class="text-red-400 text-xs mt-1 hidden">Judul harus diisi</p>
+                </div>
+                <div>
+                    <label for="descInput" class="block text-sm font-medium text-gray-300 mb-1">Deskripsi*</label>
+                    <textarea id="descInput" rows="3" required 
+                        class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:border-transparent placeholder-gray-500"></textarea>
+                    <p id="descError" class="text-red-400 text-xs mt-1 hidden">Deskripsi harus diisi</p>
+                </div>
+                <div>
+                    <label for="urlInput" class="block text-sm font-medium text-gray-300 mb-1">Link URL*</label>
+                    <input type="url" id="urlInput" required 
+                        class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:border-transparent placeholder-gray-500">
+                    <p id="urlError" class="text-red-400 text-xs mt-1 hidden">URL harus valid (contoh: https://example.com)</p>
+                </div>
+                <div>
+                    <label for="priceInput" class="block text-sm font-medium text-gray-300 mb-1">Harga (Rp)*</label>
+                    <input type="number" id="priceInput" required min="0"
+                        class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:border-transparent placeholder-gray-500">
+                    <p id="priceError" class="text-red-400 text-xs mt-1 hidden">Harga harus angka positif</p>
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button type="button" id="cancelBtn" class="flex-1 px-4 py-3 bg-gray-600/50 hover:bg-gray-600 rounded-lg font-medium smooth-transition">
+                        Batal
+                    </button>
+                    <button type="submit" id="saveBtn" class="flex-1 px-4 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 rounded-lg font-medium smooth-transition flex items-center justify-center">
+                        <span id="saveBtnText">Simpan</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Backdrop -->
+    <div id="modalBackdrop" class="fixed inset-0 bg-black/60 z-40 hidden"></div>
+
+    <!-- Notification Toast -->
+    <div id="notificationToast" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 px-6 py-3 rounded-lg shadow-lg hidden">
+        <p id="notificationMessage"></p>
+    </div>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyBArGWSK3nwgfcvWEY4LI51a2ORoam8jRU",
+          authDomain: "linkked-fc2ba.firebaseapp.com",
+          // INI YANG DIPERBARUI
+          databaseURL: "https://linkked-fc2ba-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "linkked-fc2ba",
+          storageBucket: "linkked-fc2ba.appspot.com",
+          messagingSenderId: "797884835407",
+          appId: "1:797884835407:web:97088b7afab1ad1b9bac3a"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // DOM Elements
+        const createModal = document.getElementById('createModal');
+        const modalBackdrop = document.getElementById('modalBackdrop');
+        const linkForm = document.getElementById('linkForm');
+        const saveBtn = document.getElementById('saveBtn');
+        const saveBtnText = document.getElementById('saveBtnText');
+        const notificationToast = document.getElementById('notificationToast');
+        const notificationMessage = document.getElementById('notificationMessage');
+
+        // Fungsi untuk menampilkan modal
+        function showCreateModal(category) {
+            document.getElementById('categoryInput').value = category;
+            document.getElementById('modalTitle').textContent = `Tambah Link ${capitalizeFirstLetter(category)}`;
+            linkForm.reset();
+            hideAllErrors();
+            
+            modalBackdrop.style.display = 'block';
+            createModal.style.display = 'flex';
+            
+            // Focus ke field pertama
+            setTimeout(() => {
+                document.getElementById('titleInput').focus();
+            }, 100);
+        }
+
+        // Fungsi untuk menutup modal
+        function closeModal() {
+            modalBackdrop.style.display = 'none';
+            createModal.style.display = 'none';
+            resetSaveButton();
+        }
+
+        // Fungsi untuk menyembunyikan semua error message
+        function hideAllErrors() {
+            document.querySelectorAll('[id$="Error"]').forEach(el => {
+                el.classList.add('hidden');
+            });
+        }
+
+        // Fungsi validasi form
+        function validateForm() {
+            let isValid = true;
+            const title = document.getElementById('titleInput').value.trim();
+            const description = document.getElementById('descInput').value.trim();
+            const url = document.getElementById('urlInput').value.trim();
+            const price = document.getElementById('priceInput').value.trim();
+
+            // Validasi Judul
+            if (!title) {
+                document.getElementById('titleError').classList.remove('hidden');
+                isValid = false;
+            } else {
+                document.getElementById('titleError').classList.add('hidden');
+            }
+
+            // Validasi Deskripsi
+            if (!description) {
+                document.getElementById('descError').classList.remove('hidden');
+                isValid = false;
+            } else {
+                document.getElementById('descError').classList.add('hidden');
+            }
+
+            // Validasi URL
+            if (!url || !isValidUrl(url)) {
+                document.getElementById('urlError').classList.remove('hidden');
+                isValid = false;
+            } else {
+                document.getElementById('urlError').classList.add('hidden');
+            }
+
+            // Validasi Harga
+            if (!price || isNaN(price) || Number(price) < 0) {
+                document.getElementById('priceError').classList.remove('hidden');
+                isValid = false;
+            } else {
+                document.getElementById('priceError').classList.add('hidden');
+            }
+
+            return isValid;
+        }
+
+        // Fungsi validasi URL
+        function isValidUrl(string) {
+            try {
+                new URL(string);
+                return true;
+            } catch (_) {
+                return false;
+            }
+        }
+
+        // Fungsi untuk menyimpan link
+        function saveLink() {
+            if (!validateForm()) return;
+
+            const category = document.getElementById('categoryInput').value;
+            const title = document.getElementById('titleInput').value.trim();
+            const description = document.getElementById('descInput').value.trim();
+            const url = document.getElementById('urlInput').value.trim();
+            const price = document.getElementById('priceInput').value.trim();
+
+            // Tampilkan loading state
+            showLoadingState();
+
+            // Simpan ke Firebase
+            const newLinkRef = database.ref(`links/${category}`).push();
+            newLinkRef.set({
+                title: title,
+                description: description,
+                url: url,
+                price: price,
+                createdAt: new Date().toISOString()
+            }).then(() => {
+                showNotification('Link berhasil disimpan!', 'success');
+                closeModal();
+                loadLinks(category);
+            }).catch(error => {
+                console.error('Error saving link: ', error);
+                showNotification('Gagal menyimpan: ' + error.message, 'error');
+            }).finally(() => {
+                resetSaveButton();
+            });
+        }
+
+        // Fungsi untuk menampilkan loading state
+        function showLoadingState() {
+            saveBtn.disabled = true;
+            saveBtnText.innerHTML = '<span class="spinner"></span> Menyimpan...';
+        }
+
+        // Fungsi untuk mereset tombol simpan
+        function resetSaveButton() {
+            saveBtn.disabled = false;
+            saveBtnText.textContent = 'Simpan';
+        }
+
+        // Fungsi untuk memuat link
+        function loadLinks(category) {
+            const linksContainer = document.getElementById(`${category}-links`);
+            linksContainer.innerHTML = '<p class="text-center text-gray-400 py-4">Memuat...</p>';
+            
+            database.ref(`links/${category}`).on('value', (snapshot) => {
+                linksContainer.innerHTML = '';
+                
+                if (!snapshot.exists()) {
+                    linksContainer.innerHTML = '<p class="text-center text-gray-400 py-4">Belum ada link</p>';
+                    return;
+                }
+                
+                snapshot.forEach((childSnapshot) => {
+                    const link = childSnapshot.val();
+                    const linkId = childSnapshot.key;
+                    
+                    const linkElement = document.createElement('div');
+                    linkElement.className = 'link-item glass-card p-4 rounded-lg';
+                    linkElement.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="font-bold text-lg">${link.title}</h3>
+                                <p class="text-gray-400 text-sm mt-1">${link.description.substring(0, 60)}${link.description.length > 60 ? '...' : ''}</p>
+                            </div>
+                            <span class="bg-gray-700/50 text-cyan-300 px-3 py-1 rounded-full text-sm font-medium">Rp${link.price}</span>
+                        </div>
+                        <div class="mt-3 flex justify-between items-center">
+                            <a href="${link.url}" target="_blank" class="text-sm text-blue-400 hover:underline">Buka Link</a>
+                            <span class="text-xs text-gray-500">${formatDate(link.createdAt)}</span>
+                        </div>
+                    `;
+                    
+                    linksContainer.appendChild(linkElement);
+                });
+            });
+        }
+
+        // Fungsi untuk menampilkan notifikasi
+        function showNotification(message, type = 'success') {
+            notificationMessage.textContent = message;
+            notificationToast.className = `fixed top-4 left-1/2 transform -translate-x-1/2 z-50 px-6 py-3 rounded-lg shadow-lg ${
+                type === 'success' ? 'bg-green-500' : 'bg-red-500'
+            }`;
+            notificationToast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                notificationToast.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Fungsi bantuan
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('id-ID', options);
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load initial data
+            loadLinks('apk');
+            loadLinks('module');
+            loadLinks('root');
+            
+            // Add button event listeners
+            document.getElementById('add-apk-btn').addEventListener('click', () => showCreateModal('apk'));
+            document.getElementById('add-module-btn').addEventListener('click', () => showCreateModal('module'));
+            document.getElementById('add-root-btn').addEventListener('click', () => showCreateModal('root'));
+            
+            // Modal event listeners
+            document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+            document.getElementById('cancelBtn').addEventListener('click', closeModal);
+            modalBackdrop.addEventListener('click', closeModal);
+            
+            // Form submission
+            linkForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveLink();
+            });
+            
+            // Validasi real-time
+            document.getElementById('titleInput').addEventListener('input', function() {
+                if (this.value.trim()) {
+                    document.getElementById('titleError').classList.add('hidden');
+                }
+            });
+            
+            document.getElementById('descInput').addEventListener('input', function() {
+                if (this.value.trim()) {
+                    document.getElementById('descError').classList.add('hidden');
+                }
+            });
+            
+            document.getElementById('urlInput').addEventListener('input', function() {
+                if (this.value.trim() && isValidUrl(this.value.trim())) {
+                    document.getElementById('urlError').classList.add('hidden');
+                }
+            });
+            
+            document.getElementById('priceInput').addEventListener('input', function() {
+                const value = this.value.trim();
+                if (value && !isNaN(value) && Number(value) >= 0) {
+                    document.getElementById('priceError').classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
