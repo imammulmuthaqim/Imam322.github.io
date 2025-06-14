@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pinjam Uang - Dompet Digital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            -webkit-font-smoothing: antialiased; 
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.05); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+        }
+        .smooth-transition { transition: all 0.3s ease-in-out; }
+        .pin-dot { width: 1rem; height: 1rem; border-radius: 50%; border: 2px solid #67e8f9; }
+        .pin-dot.filled { background-color: #67e8f9; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        .shake { animation: shake 0.3s ease-in-out; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 via-indigo-900 to-purple-900 text-gray-200 min-h-screen">
+    
+    <!-- Header -->
+    <header class="glass-card p-4 mb-6">
+        <div class="max-w-4xl mx-auto flex items-center justify-between">
+            <button onclick="window.history.back()" class="flex items-center text-cyan-300 hover:text-cyan-100 smooth-transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+                Kembali
+            </button>
+            <h1 class="text-xl font-bold text-cyan-300">Pinjam Uang</h1>
+            <div class="w-20"></div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="max-w-4xl mx-auto p-4">
+        
+        <!-- User Info Card -->
+        <div id="user-info-card" class="glass-card p-6 rounded-2xl mb-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-400">Selamat datang,</p>
+                    <h2 id="username-display" class="text-2xl font-bold text-cyan-300">Loading...</h2>
+                    <p id="phone-display" class="text-gray-400">Loading...</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-gray-400">Saldo Saat Ini</p>
+                    <p id="balance-display" class="text-xl font-bold text-green-400">Rp 0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="glass-card p-2 rounded-xl mb-6">
+            <div class="flex">
+                <button id="tab-pinjam" class="tab-btn flex-1 py-3 px-4 rounded-lg text-center font-semibold bg-cyan-500/20 text-cyan-300">
+                    Ajukan Pinjaman
+                </button>
+                <button id="tab-tagihan" class="tab-btn flex-1 py-3 px-4 rounded-lg text-center font-semibold text-gray-400 hover:text-cyan-300 smooth-transition">
+                    Cek Tagihan
+                </button>
+            </div>
+        </div>
+
+        <!-- Tab Content: Ajukan Pinjaman -->
+        <div id="content-pinjam" class="tab-content">
+            <div class="glass-card p-6 rounded-2xl mb-6">
+                <h3 class="text-xl font-bold mb-4 text-cyan-300">Form Pengajuan Pinjaman</h3>
+                <form id="loan-form" class="space-y-4">
+                    <div>
+                        <label for="loan-phone" class="block text-sm font-medium text-indigo-200 mb-2">
+                            No. Dana (Otomatis dari akun Anda)
+                        </label>
+                        <input type="tel" id="loan-phone" readonly class="w-full p-3 bg-gray-800/30 border-2 border-gray-600 rounded-lg text-gray-400 cursor-not-allowed">
+                    </div>
+                    <div>
+                        <label for="loan-amount" class="block text-sm font-medium text-indigo-200 mb-2">
+                            Nominal Pinjaman
+                        </label>
+                        <input type="number" id="loan-amount" required min="50000" max="5000000" step="10000" 
+                               class="w-full p-3 bg-gray-800/50 border-2 border-indigo-700 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:outline-none" 
+                               placeholder="Minimal Rp 50.000">
+                        <p class="text-xs text-gray-400 mt-1">Minimal Rp 50.000 - Maksimal Rp 5.000.000</p>
+                    </div>
+                    <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
+                        <h4 class="font-semibold text-yellow-300 mb-2">⚠️ Informasi Penting:</h4>
+                        <ul class="text-sm text-yellow-200 space-y-1">
+                            <li>• Tidak ada biaya admin saat pengajuan</li>
+                            <li>• Biaya admin bertambah Rp 1.000 setiap hari jam 00:00</li>
+                            <li>• Saldo akan langsung masuk ke rekening setelah disetujui</li>
+                            <li>• Pastikan data yang dimasukkan benar</li>
+                        </ul>
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold py-3 px-4 rounded-lg smooth-transition shadow-lg">
+                        Ajukan Pinjaman
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tab Content: Cek Tagihan -->
+        <div id="content-tagihan" class="tab-content hidden">
+            <div class="glass-card p-6 rounded-2xl mb-6">
+                <h3 class="text-xl font-bold mb-4 text-cyan-300">Tagihan Pinjaman Aktif</h3>
+                <div id="loan-list" class="space-y-4">
+                    <!-- Loan items will be populated here -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-backdrop" class="fixed inset-0 bg-black/60 z-40 hidden"></div>
+    
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-6 rounded-2xl shadow-2xl">
+            <h3 class="text-xl font-bold mb-4 text-cyan-300">Konfirmasi Pinjaman</h3>
+            <div class="space-y-3 text-sm mb-6">
+                <div class="flex justify-between">
+                    <span class="text-gray-400">No. Dana:</span>
+                    <span id="confirm-phone" class="font-semibold"></span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Nominal Pinjaman:</span>
+                    <span id="confirm-amount" class="font-semibold text-green-400"></span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Biaya Admin Saat Ini:</span>
+                    <span id="confirm-admin" class="font-semibold text-yellow-400">Rp 0</span>
+                </div>
+                <div class="border-t border-white/10 my-3"></div>
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Total Diterima:</span>
+                    <span id="confirm-total" class="font-bold text-cyan-300 text-lg"></span>
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <button id="cancel-loan" class="w-1/2 bg-gray-600/50 text-white font-bold py-3 rounded-lg">
+                    Batal
+                </button>
+                <button id="confirm-loan" class="w-1/2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-bold py-3 rounded-lg">
+                    Konfirmasi
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PIN Modal -->
+    <div id="pin-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+        <div class="glass-card w-full max-w-xs p-6 rounded-2xl shadow-2xl text-center relative">
+            <button id="pin-modal-close-btn" class="absolute top-2 right-3 text-2xl text-gray-400 hover:text-white hidden">&times;</button>
+            <h3 class="text-xl font-bold mb-2">Masukkan PIN</h3>
+            <p class="text-sm text-gray-400 mb-6">Untuk keamanan transaksi</p>
+            <div id="pin-dots-container" class="flex justify-center gap-3 mb-6">
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+            </div>
+            <input type="number" id="pin-input-hidden" class="opacity-0 absolute">
+            <p id="pin-error" class="text-red-400 text-sm mt-2 h-4"></p>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-6 rounded-2xl shadow-2xl">
+            <h3 class="text-xl font-bold mb-4 text-cyan-300">Bayar Tagihan</h3>
+            <div id="payment-details" class="space-y-3 text-sm mb-6">
+                <!-- Payment details will be populated here -->
+            </div>
+            <div class="flex gap-4">
+                <button id="cancel-payment" class="w-1/2 bg-gray-600/50 text-white font-bold py-3 rounded-lg">
+                    Batal
+                </button>
+                <button id="confirm-payment" class="w-1/2 bg-gradient-to-r from-green-500 to-teal-500 text-white font-bold py-3 rounded-lg">
+                    Bayar Sekarang
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Modal -->
+    <div id="notification-modal" class="fixed top-8 left-1/2 -translate-x-1/2 z-50 hidden">
+        <div id="notification-card" class="p-4 rounded-lg text-white font-semibold shadow-2xl min-w-[250px] text-center">
+            <p id="notification-message"></p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, runTransaction, onSnapshot, collection, query, orderBy, serverTimestamp, where, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyBv31cJC19pEpa6EpamkgaexRdpN0425TKsY",
+          authDomain: "imammulmu322.firebaseapp.com",
+          projectId: "imammulmu322",
+          storageBucket: "imammulmu322.appspot.com",
+          messagingSenderId: "1048023716109",
+          appId: "1:1048023716109:web:e467f867fdd9104ed518b4"
+        };
+
+        // Global Variables
+        let db, auth, currentUser = null;
+        let currentLoanData = {};
+        let currentPaymentData = {};
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+        signInAnonymously(auth);
+
+        // Utility Functions
+        const showNotification = (message, isError = false) => {
+            const notifModal = document.getElementById('notification-modal');
+            const notifCard = document.getElementById('notification-card');
+            const notifMessage = document.getElementById('notification-message');
+            notifMessage.innerText = message;
+            notifCard.className = `p-4 rounded-lg text-white font-semibold shadow-2xl min-w-[250px] text-center ${isError ? 'bg-red-500' : 'bg-green-500'}`;
+            notifModal.style.display = 'flex';
+            setTimeout(() => { notifModal.style.display = 'none'; }, 3000);
+        };
+
+        const openModal = (modalId) => {
+            if (modalId === 'pin-modal') {
+                document.getElementById('pin-modal-close-btn').classList.add('hidden');
+                document.getElementById('pin-error').innerText = '';
+            }
+            document.getElementById(modalId).style.display = 'flex';
+            document.getElementById('modal-backdrop').style.display = 'block';
+        };
+
+        const closeModal = () => {
+            document.querySelectorAll('.fixed.inset-0.z-50').forEach(el => el.style.display = 'none');
+            document.getElementById('modal-backdrop').style.display = 'none';
+        };
+
+        const formatCurrency = (amount) => {
+            return new Intl.NumberFormat('id-ID', { 
+                style: 'currency', 
+                currency: 'IDR', 
+                minimumFractionDigits: 0 
+            }).format(amount);
+        };
+
+        const calculateAdminFee = (loanDate) => {
+            const now = new Date();
+            const loanDateTime = loanDate.toDate();
+            const daysDiff = Math.floor((now - loanDateTime) / (1000 * 60 * 60 * 24));
+            return daysDiff * 1000; // 1000 per day
+        };
+
+        // Load User Data
+        const loadUserData = async () => {
+            const phoneNumber = localStorage.getItem('currentUserPhone');
+            if (!phoneNumber) {
+                showNotification('Silakan login terlebih dahulu', true);
+                setTimeout(() => window.location.href = 'index.html', 2000);
+                return;
+            }
+
+            try {
+                const userRef = doc(db, "users", phoneNumber);
+                const userDoc = await getDoc(userRef);
+                
+                if (userDoc.exists()) {
+                    currentUser = { ...userDoc.data(), phoneNumber: userDoc.id };
+                    updateUI();
+                    loadUserLoans();
+                } else {
+                    showNotification('Data pengguna tidak ditemukan', true);
+                    setTimeout(() => window.location.href = 'index.html', 2000);
+                }
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                showNotification('Gagal memuat data pengguna', true);
+            }
+        };
+
+        const updateUI = () => {
+            if (currentUser) {
+                document.getElementById('username-display').textContent = currentUser.username;
+                document.getElementById('phone-display').textContent = currentUser.phoneNumber;
+                document.getElementById('balance-display').textContent = formatCurrency(currentUser.balance);
+                document.getElementById('loan-phone').value = currentUser.phoneNumber;
+            }
+        };
+
+        // Tab Management
+        const initTabs = () => {
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.id.replace('tab-', 'content-');
+                    
+                    // Update button states
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('bg-cyan-500/20', 'text-cyan-300');
+                        btn.classList.add('text-gray-400');
+                    });
+                    button.classList.add('bg-cyan-500/20', 'text-cyan-300');
+                    button.classList.remove('text-gray-400');
+
+                    // Update content visibility
+                    tabContents.forEach(content => content.classList.add('hidden'));
+                    document.getElementById(targetId).classList.remove('hidden');
+
+                    // Load data for tagihan tab
+                    if (targetId === 'content-tagihan') {
+                        loadUserLoans();
+                    }
+                });
+            });
+        };
+
+        // Loan Functions
+        const handleLoanSubmit = async (e) => {
+            e.preventDefault();
+            const amount = parseInt(document.getElementById('loan-amount').value);
+            
+            if (amount < 50000) {
+                showNotification('Minimal pinjaman Rp 50.000', true);
+                return;
+            }
+            if (amount > 5000000) {
+                showNotification('Maksimal pinjaman Rp 5.000.000', true);
+                return;
+            }
+
+            currentLoanData = {
+                phoneNumber: currentUser.phoneNumber,
+                amount: amount,
+                adminFee: 0 // No admin fee at the time of loan application
+            };
+
+            // Show confirmation modal
+            document.getElementById('confirm-phone').textContent = currentLoanData.phoneNumber;
+            document.getElementById('confirm-amount').textContent = formatCurrency(currentLoanData.amount);
+            document.getElementById('confirm-admin').textContent = formatCurrency(currentLoanData.adminFee);
+            document.getElementById('confirm-total').textContent = formatCurrency(currentLoanData.amount);
+            
+            openModal('confirmation-modal');
+        };
+
+        const confirmLoan = () => {
+            closeModal();
+            openModal('pin-modal');
+            document.getElementById('pin-input-hidden').focus();
+        };
+
+        const executeLoan = async () => {
+            try {
+                const loanId = `LOAN-${Date.now()}`;
+                const transactionId = `TRX-${Date.now()}`;
+                
+                await runTransaction(db, async (transaction) => {
+                    // Update user balance
+                    const userRef = doc(db, "users", currentUser.phoneNumber);
+                    const userDoc = await transaction.get(userRef);
+                    
+                    if (!userDoc.exists()) throw "Pengguna tidak ditemukan.";
+                    
+                    const newBalance = userDoc.data().balance + currentLoanData.amount;
+                    transaction.update(userRef, { balance: newBalance });
+
+                    // Create loan record
+                    const loanRef = doc(db, "loans", loanId);
+                    transaction.set(loanRef, {
+                        userId: currentUser.phoneNumber,
+                        userName: currentUser.username,
+                        amount: currentLoanData.amount,
+                        adminFee: 0,
+                        totalDebt: currentLoanData.amount,
+                        status: 'AKTIF',
+                        createdAt: serverTimestamp(),
+                        dueDate: null // Will be calculated when payment is due
+                    });
+
+                    // Add to history
+                    const historyRef = doc(collection(db, "users", currentUser.phoneNumber, "history"));
+                    transaction.set(historyRef, {
+                        type: 'PINJAMAN',
+                        amount: currentLoanData.amount,
+                        timestamp: serverTimestamp(),
+                        transactionId: transactionId,
+                        loanId: loanId,
+                        description: 'Pinjaman uang disetujui'
+                    });
+                });
+
+                showNotification('Pinjaman berhasil disetujui! Saldo telah ditambahkan.');
+                document.getElementById('loan-form').reset();
+                loadUserData(); // Refresh user data
+                loadUserLoans(); // Refresh loan list
+                
+            } catch (error) {
+                console.error('Error processing loan:', error);
+                showNotification(`Gagal memproses pinjaman: ${error}`, true);
+            }
+        };
+
+        const loadUserLoans = async () => {
+            if (!currentUser) return;
+
+            try {
+                const loansRef = collection(db, "loans");
+                const q = query(loansRef, where("userId", "==", currentUser.phoneNumber), where("status", "==", "AKTIF"));
+                
+                onSnapshot(q, (snapshot) => {
+                    const loanList = document.getElementById('loan-list');
+                    loanList.innerHTML = '';
+
+                    if (snapshot.empty) {
+                        loanList.innerHTML = '<p class="text-center text-gray-400">Tidak ada tagihan pinjaman aktif.</p>';
+                        return;
+                    }
+
+                    snapshot.forEach((doc) => {
+                        const loan = { id: doc.id, ...doc.data() };
+                        const currentAdminFee = calculateAdminFee(loan.createdAt);
+                        const totalDebt = loan.amount + currentAdminFee;
+
+                        const loanItem = document.createElement('div');
+                        loanItem.className = 'glass-card p-4 rounded-lg';
+                        loanItem.innerHTML = `
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <p class="font-bold text-cyan-300">ID: ${loan.id}</p>
+                                    <p class="text-sm text-gray-400">Tanggal: ${loan.createdAt.toDate().toLocaleDateString('id-ID')}</p>
+                                </div>
+                                <span class="px-3 py-1 bg-yellow-500/20 text-yellow-300 rounded-full text-xs font-semibold">
+                                    ${loan.status}
+                                </span>
+                            </div>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">Pinjaman Pokok:</span>
+                                    <span class="font-semibold">${formatCurrency(loan.amount)}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">Biaya Admin:</span>
+                                    <span class="font-semibold text-yellow-400">${formatCurrency(currentAdminFee)}</span>
+                                </div>
+                                <div class="border-t border-white/10 my-2"></div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">Total Tagihan:</span>
+                                    <span class="font-bold text-red-400">${formatCurrency(totalDebt)}</span>
+                                </div>
+                            </div>
+                            <button onclick="showPaymentModal('${loan.id}', ${loan.amount}, ${currentAdminFee})" 
+                                    class="w-full mt-4 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white font-bold py-2 px-4 rounded-lg smooth-transition">
+                                Bayar Tagihan
+                            </button>
+                        `;
+                        loanList.appendChild(loanItem);
+                    });
+                });
+            } catch (error) {
+                console.error('Error loading loans:', error);
+                showNotification('Gagal memuat data pinjaman', true);
+            }
+        };
+
+        const showPaymentModal = (loanId, originalAmount, adminFee) => {
+            const totalDebt = originalAmount + adminFee;
+            
+            currentPaymentData = {
+                loanId: loanId,
+                originalAmount: originalAmount,
+                adminFee: adminFee,
+                totalDebt: totalDebt
+            };
+
+            const paymentDetails = document.getElementById('payment-details');
+            paymentDetails.innerHTML = `
+                <div class="flex justify-between">
+                    <span class="text-gray-400">ID Pinjaman:</span>
+                    <span class="font-semibold">${loanId}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Pinjaman Pokok:</span>
+                    <span class="font-semibold">${formatCurrency(originalAmount)}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Biaya Admin:</span>
+                    <span class="font-semibold text-yellow-400">${formatCurrency(adminFee)}</span>
+                </div>
+                <div class="border-t border-white/10 my-3"></div>
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Total Pembayaran:</span>
+                    <span class="font-bold text-red-400 text-lg">${formatCurrency(totalDebt)}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Saldo Anda:</span>
+                    <span class="font-semibold ${currentUser.balance >= totalDebt ? 'text-green-400' : 'text-red-400'}">${formatCurrency(currentUser.balance)}</span>
+                </div>
+            `;
+
+            openModal('payment-modal');
+        };
+
+        const confirmPayment = () => {
+            if (currentUser.balance < currentPaymentData.totalDebt) {
+                showNotification('Saldo tidak mencukupi untuk pembayaran', true);
+                return;
+            }
+            
+            closeModal();
+            openModal('pin-modal');
+            document.getElementById('pin-input-hidden').focus();
+        };
+
+        const executePayment = async () => {
+            try {
+                const transactionId = `PAY-${Date.now()}`;
+                
+                await runTransaction(db, async (transaction) => {
+                    // Update user balance
+                    const userRef = doc(db, "users", currentUser.phoneNumber);
+                    const userDoc = await transaction.get(userRef);
+                    
+                    if (!userDoc.exists()) throw "Pengguna tidak ditemukan.";
+                    
+                    const newBalance = userDoc.data().balance - currentPaymentData.totalDebt;
+                    if (newBalance < 0) throw "Saldo tidak mencukupi.";
+                    
+                    transaction.update(userRef, { balance: newBalance });
+
+                    // Update loan status
+                    const loanRef = doc(db, "loans", currentPaymentData.loanId);
+                    transaction.update(loanRef, {
+                        status: 'LUNAS',
+                        paidAt: serverTimestamp(),
+                        finalAdminFee: currentPaymentData.adminFee,
+                        totalPaid: currentPaymentData.totalDebt
+                    });
+
+                    // Add to history
+                    const historyRef = doc(collection(db, "users", currentUser.phoneNumber, "history"));
+                    transaction.set(historyRef, {
+                        type: 'BAYAR_PINJAMAN',
+                        amount: currentPaymentData.totalDebt,
+                        timestamp: serverTimestamp(),
+                        transactionId: transactionId,
+                        loanId: currentPaymentData.loanId,
+                        description: `Pembayaran pinjaman ${currentPaymentData.loanId}`,
+                        breakdown: {
+                            principal: currentPaymentData.originalAmount,
+                            adminFee: currentPaymentData.adminFee
+                        }
+                    });
+                });
+
+                showNotification('Pembayaran berhasil! Pinjaman telah lunas.');
+                loadUserData(); // Refresh user data
+                loadUserLoans(); // Refresh loan list
+                
+            } catch (error) {
+                console.error('Error processing payment:', error);
+                showNotification(`Gagal memproses pembayaran: ${error}`, true);
+            }
+        };
+
+        // PIN Handling
+        const handlePinInput = async (pin) => {
+            if (pin === currentUser.pin) {
+                document.getElementById('pin-error').innerText = '';
+                closeModal();
+                showNotification("PIN Benar! Memproses...");
+                
+                if (currentLoanData.amount) {
+                    await executeLoan();
+                    currentLoanData = {};
+                } else if (currentPaymentData.loanId) {
+                    await executePayment();
+                    currentPaymentData = {};
+                }
+            } else {
+                const pinDots = document.getElementById('pin-dots-container');
+                pinDots.classList.add('shake');
+                document.getElementById('pin-error').innerText = 'PIN salah!';
+                document.getElementById('pin-modal-close-btn').classList.remove('hidden');
+                setTimeout(() => pinDots.classList.remove('shake'), 300);
+            }
+        };
+
+        // Make functions globally available
+        window.showPaymentModal = showPaymentModal;
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Store current user phone for this session
+            const urlParams = new URLSearchParams(window.location.search);
+            const phoneFromUrl = urlParams.get('phone');
+            if (phoneFromUrl) {
+                localStorage.setItem('currentUserPhone', phoneFromUrl);
+            }
+
+            loadUserData();
+            initTabs();
+
+            // Form submissions
+            document.getElementById('loan-form').addEventListener('submit', handleLoanSubmit);
+            
+            // Modal controls
+            document.getElementById('confirm-loan').addEventListener('click', confirmLoan);
+            document.getElementById('cancel-loan').addEventListener('click', closeModal);
+            document.getElementById('confirm-payment').addEventListener('click', confirmPayment);
+            document.getElementById('cancel-payment').addEventListener('click', closeModal);
+            document.getElementById('pin-modal-close-btn').addEventListener('click', closeModal);
+
+            // PIN input
+            document.getElementById('pin-input-hidden').addEventListener('input', (e) => {
+                const pin = e.target.value;
+                const dots = document.querySelectorAll('#pin-dots-container .pin-dot');
+                dots.forEach((dot, index) => { 
+                    dot.classList.toggle('filled', index < pin.length); 
+                });
+                if (pin.length === 6) { 
+                    handlePinInput(pin); 
+                    e.target.value = ''; 
+                }
+            });
+
+            // Close modals on backdrop click
+            document.getElementById('modal-backdrop').addEventListener('click', closeModal);
+        });
+    </script>
+</body>
+</html>
