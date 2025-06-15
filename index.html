@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dompet Digital - Login</title>
+    <title>DANA - Dompet Digital</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body { 
             font-family: 'Inter', sans-serif; 
@@ -16,16 +16,343 @@
             position: relative;
             overflow: hidden;
         }
+
+        /* === ENHANCED SPLASH SCREEN STYLES === */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #000000 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: splashFadeOut 1s ease-in-out 4s forwards;
+        }
+
+        /* Lightning Bolt Logo Animation */
+        .lightning-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin-bottom: 40px;
+            animation: containerPulse 3s ease-in-out infinite;
+        }
+
+        .lightning-bolt {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 120px;
+            animation: lightningGlow 2s ease-in-out infinite alternate;
+        }
+
+        .lightning-bolt::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 40px solid #FFD700;
+            border-right: 15px solid transparent;
+            border-bottom: 60px solid transparent;
+            animation: topBoltFlash 1.5s ease-in-out infinite;
+        }
+
+        .lightning-bolt::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-right: 40px solid #FFD700;
+            border-left: 15px solid transparent;
+            border-top: 60px solid transparent;
+            animation: bottomBoltFlash 1.5s ease-in-out infinite 0.3s;
+        }
+
+        .energy-rings {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 160px;
+            height: 160px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 50%;
+            animation: ringExpand 2s ease-in-out infinite;
+        }
+
+        .energy-rings::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            width: 200px;
+            height: 200px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 50%;
+            animation: ringExpand 2s ease-in-out infinite 0.5s;
+        }
+
+        .energy-rings::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 120px;
+            height: 120px;
+            border: 3px solid rgba(255, 215, 0, 0.4);
+            border-radius: 50%;
+            animation: ringContract 2s ease-in-out infinite;
+        }
+
+        /* Brand Text Animation */
+        .brand-container {
+            text-align: center;
+            animation: brandSlideUp 1s ease-out 1s both;
+        }
+
+        .brand-title {
+            font-size: 48px;
+            font-weight: 900;
+            color: #FFD700;
+            letter-spacing: 8px;
+            margin-bottom: 8px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+
+        .brand-subtitle {
+            font-size: 16px;
+            font-weight: 500;
+            color: #888;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            animation: subtitleFade 2s ease-in-out infinite alternate 0.5s;
+        }
+
+        /* Enhanced Loading Animation */
+        .loading-container {
+            margin-top: 60px;
+            animation: loadingSlideUp 1s ease-out 1.5s both;
+        }
+
+        .loading-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .loading-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #FFD700, #FFA500, #FFD700);
+            border-radius: 2px;
+            animation: progressFill 3s ease-in-out infinite;
+        }
+
+        .loading-text {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            animation: loadingTextPulse 1.5s ease-in-out infinite;
+        }
+
+        /* Keyframe Animations */
+        @keyframes containerPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes lightningGlow {
+            0% { filter: drop-shadow(0 0 10px #FFD700); }
+            100% { filter: drop-shadow(0 0 30px #FFD700) drop-shadow(0 0 50px #FFA500); }
+        }
+
+        @keyframes topBoltFlash {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        @keyframes bottomBoltFlash {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        @keyframes ringExpand {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.8; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.3; }
+            100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.8; }
+        }
+
+        @keyframes ringContract {
+            0% { transform: scale(1.2); opacity: 0.3; }
+            50% { transform: scale(0.8); opacity: 0.8; }
+            100% { transform: scale(1.2); opacity: 0.3; }
+        }
+
+        @keyframes brandSlideUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes titleGlow {
+            0% { text-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+            100% { text-shadow: 0 0 40px rgba(255, 215, 0, 0.8), 0 0 60px rgba(255, 165, 0, 0.4); }
+        }
+
+        @keyframes subtitleFade {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes loadingSlideUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes progressFill {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 100%; }
+        }
+
+        @keyframes loadingTextPulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes splashFadeOut {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.1); pointer-events: none; }
+        }
+
+        /* === ENHANCED MAIN APP STYLES === */
+        .main-app {
+            opacity: 0;
+            animation: mainAppFadeIn 1s ease-in-out 5s forwards;
+        }
+
+        @keyframes mainAppFadeIn {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Enhanced Glass Card */
         .glass-card { 
             background: rgba(255, 255, 255, 0.05); 
-            backdrop-filter: blur(12px); 
-            -webkit-backdrop-filter: blur(12px); 
+            backdrop-filter: blur(25px); 
+            -webkit-backdrop-filter: blur(25px); 
             border: 1px solid rgba(255, 255, 255, 0.1); 
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
         }
-        .smooth-transition { transition: all 0.3s ease-in-out; }
 
-        /* === CSS Animasi Kotak Mengambang === */
-        .bg-bubbles {
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: cardShimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes cardShimmer {
+            0% { left: -100%; }
+            50% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        /* Enhanced Input Fields */
+        .input-field {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .input-field:focus {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: #FFD700;
+            box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.1), 0 8px 25px rgba(255, 215, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Enhanced Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #FFA500 0%, #FF8C00 50%, #FFD700 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-secondary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-secondary:hover::before {
+            left: 100%;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Enhanced Background */
+        .bg-particles {
             position: absolute;
             top: 0;
             left: 0;
@@ -34,118 +361,199 @@
             z-index: 1;
         }
 
-        .bg-bubbles li {
+        .particle {
             position: absolute;
-            list-style: none;
-            display: block;
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.1);
-            bottom: -160px;
-            animation: square 25s infinite;
-            transition-timing-function: linear;
-            border-radius: 5px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: particleFloat 25s infinite linear;
         }
 
-        .bg-bubbles li:nth-child(1) { left: 10%; }
-        .bg-bubbles li:nth-child(2) { left: 20%; width: 80px; height: 80px; animation-delay: 2s; animation-duration: 17s; }
-        .bg-bubbles li:nth-child(3) { left: 25%; animation-delay: 4s; }
-        .bg-bubbles li:nth-child(4) { left: 40%; width: 60px; height: 60px; animation-duration: 22s; background-color: rgba(255, 255, 255, 0.2); }
-        .bg-bubbles li:nth-child(5) { left: 70%; }
-        .bg-bubbles li:nth-child(6) { left: 80%; width: 120px; height: 120px; animation-delay: 3s; background-color: rgba(255, 255, 255, 0.15); }
-        .bg-bubbles li:nth-child(7) { left: 32%; width: 160px; height: 160px; animation-delay: 7s; }
-        .bg-bubbles li:nth-child(8) { left: 55%; width: 20px; height: 20px; animation-delay: 15s; animation-duration: 40s; }
-        .bg-bubbles li:nth-child(9) { left: 25%; width: 10px; height: 10px; animation-delay: 2s; animation-duration: 40s; background-color: rgba(255, 255, 255, 0.25); }
-        .bg-bubbles li:nth-child(10) { left: 90%; width: 160px; height: 160px; animation-delay: 11s; }
+        .particle:nth-child(1) { left: 10%; width: 30px; height: 30px; animation-delay: 0s; }
+        .particle:nth-child(2) { left: 20%; width: 20px; height: 20px; animation-delay: 3s; }
+        .particle:nth-child(3) { left: 35%; width: 35px; height: 35px; animation-delay: 6s; }
+        .particle:nth-child(4) { left: 50%; width: 25px; height: 25px; animation-delay: 9s; }
+        .particle:nth-child(5) { left: 65%; width: 28px; height: 28px; animation-delay: 12s; }
+        .particle:nth-child(6) { left: 80%; width: 22px; height: 22px; animation-delay: 15s; }
 
-        @keyframes square {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-1080px) rotate(720deg); opacity: 0; }
+        @keyframes particleFloat {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
         }
+
+        /* Enhanced Logo in Login */
+        .login-logo {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .smooth-transition { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
     </style>
 </head>
-<body class="bg-gradient-to-br from-gray-900 via-indigo-900 to-purple-900 text-gray-200">
+<body class="bg-gradient-to-br from-gray-900 via-blue-900 to-black text-white">
     
-    <!-- Latar Belakang Animasi -->
-    <ul class="bg-bubbles">
-        <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
-    </ul>
-
-    <!-- ===== LAYAR AUTENTIKASI (LOGIN & REGISTER) ===== -->
-    <div class="min-h-screen w-full flex flex-col items-center justify-center p-4 relative z-10">
-        <div class="w-full max-w-md">
-            <!-- Form Login -->
-            <div id="login-view">
-                <div class="glass-card p-8 rounded-2xl shadow-2xl">
-                    <h2 class="text-3xl font-bold text-center text-cyan-300 mb-6">Sign In</h2>
-                    <form id="login-form" class="space-y-6">
-                        <div>
-                            <label for="login-phone" class="text-sm font-medium text-indigo-200">No. Telepon</label>
-                            <input type="tel" id="login-phone" required class="w-full p-3 mt-1 bg-gray-800/50 border-2 border-indigo-700 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:outline-none placeholder-gray-500" placeholder="08123456789">
-                        </div>
-                        <div>
-                            <label for="login-password" class="text-sm font-medium text-indigo-200">Password</label>
-                            <input type="password" id="login-password" required class="w-full p-3 mt-1 bg-gray-800/50 border-2 border-indigo-700 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:outline-none" placeholder="••••••••">
-                        </div>
-                        <button type="submit" class="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-bold py-3 px-4 rounded-lg smooth-transition shadow-lg">
-                            Masuk
-                        </button>
-                    </form>
-                    <p class="text-center text-sm text-gray-400 mt-6">
-                        Belum punya akun? 
-                        <button id="show-register-btn" class="font-semibold text-cyan-400 hover:underline">Daftar sekarang</button>
-                    </p>
-                </div>
+    <!-- === ENHANCED SPLASH SCREEN === -->
+    <div class="splash-screen" id="splash-screen">
+        <div class="lightning-container">
+            <div class="energy-rings"></div>
+            <div class="lightning-bolt"></div>
+        </div>
+        
+        <div class="brand-container">
+            <div class="brand-title">DANA DIGITAL</div>
+            <div class="brand-subtitle">Modern E-wallet</div>
+        </div>
+        
+        <div class="loading-container">
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
             </div>
+            <div class="loading-text">Memuat aplikasi...</div>
+        </div>
+    </div>
 
-            <!-- Form Register -->
-            <div id="register-view" class="hidden">
-                <div class="glass-card p-8 rounded-2xl shadow-2xl">
-                    <h2 class="text-3xl font-bold text-center text-cyan-300 mb-6">Buat Akun Baru</h2>
-                    <form id="register-form" class="space-y-4">
-                        <div>
-                            <label for="register-username" class="text-sm font-medium text-indigo-200">Username</label>
-                            <input type="text" id="register-username" required class="w-full p-3 mt-1 bg-gray-800/50 border-2 border-indigo-700 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:outline-none" placeholder="Contoh: Imam Keren">
+    <!-- === MAIN APPLICATION === -->
+    <div class="main-app">
+        <!-- Enhanced Floating Particles Background -->
+        <div class="bg-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+
+        <!-- ===== AUTHENTICATION SCREENS ===== -->
+        <div class="min-h-screen w-full flex flex-col items-center justify-center p-6 relative z-10">
+            <div class="w-full max-w-md">
+                <!-- Enhanced Login Form -->
+                <div id="login-view">
+                    <div class="glass-card p-10 rounded-3xl shadow-2xl">
+                        <!-- Enhanced Header -->
+                        <div class="text-center mb-10">
+                            <div class="inline-flex items-center justify-center w-20 h-20 login-logo rounded-3xl mb-6 shadow-2xl">
+                                <div class="lightning-bolt-small">
+                                    <svg width="32" height="40" viewBox="0 0 32 40" fill="none">
+                                        <path d="M18 0L2 22H14L10 40L26 18H14L18 0Z" fill="white"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <h2 class="text-4xl font-bold text-white mb-3 tracking-wide">Selamat Datang</h2>
+                            <p class="text-gray-300 text-base font-medium">Masuk ke DANA Digital Anda</p>
                         </div>
-                        <div>
-                            <label for="register-phone" class="text-sm font-medium text-indigo-200">No. Telepon</label>
-                            <input type="tel" id="register-phone" required class="w-full p-3 mt-1 bg-gray-800/50 border-2 border-indigo-700 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:outline-none" placeholder="08123456789">
+
+                        <form id="login-form" class="space-y-7">
+                            <div class="space-y-3">
+                                <label for="login-phone" class="text-sm font-semibold text-gray-200 tracking-wide">Nomor Telepon</label>
+                                <input type="tel" id="login-phone" required 
+                                       class="w-full p-5 input-field rounded-2xl text-white placeholder-gray-400 focus:outline-none font-medium" 
+                                       placeholder="Masukkan nomor telepon">
+                            </div>
+                            <div class="space-y-3">
+                                <label for="login-password" class="text-sm font-semibold text-gray-200 tracking-wide">Password</label>
+                                <input type="password" id="login-password" required 
+                                       class="w-full p-5 input-field rounded-2xl text-white placeholder-gray-400 focus:outline-none font-medium" 
+                                       placeholder="Masukkan password">
+                            </div>
+                            <button type="submit" 
+                                    class="w-full btn-primary text-white font-bold py-5 px-6 rounded-2xl smooth-transition text-lg tracking-wide relative z-10">
+                                Masuk ke DANA
+                            </button>
+                        </form>
+
+                        <div class="mt-10 text-center">
+                            <p class="text-gray-300 text-base">
+                                Belum punya akun? 
+                                <button id="show-register-btn" class="font-bold text-yellow-400 hover:text-yellow-300 smooth-transition ml-1">
+                                    Daftar sekarang
+                                </button>
+                            </p>
                         </div>
-                        <div>
-                            <label for="register-password" class="text-sm font-medium text-indigo-200">Password</label>
-                            <input type="password" id="register-password" required class="w-full p-3 mt-1 bg-gray-800/50 border-2 border-indigo-700 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:outline-none" placeholder="Minimal 6 karakter">
+                    </div>
+                </div>
+
+                <!-- Enhanced Register Form -->
+                <div id="register-view" class="hidden">
+                    <div class="glass-card p-10 rounded-3xl shadow-2xl">
+                        <!-- Enhanced Header -->
+                        <div class="text-center mb-8">
+                            <div class="inline-flex items-center justify-center w-20 h-20 login-logo rounded-3xl mb-6 shadow-2xl">
+                                <div class="lightning-bolt-small">
+                                    <svg width="32" height="40" viewBox="0 0 32 40" fill="none">
+                                        <path d="M18 0L2 22H14L10 40L26 18H14L18 0Z" fill="white"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <h2 class="text-4xl font-bold text-white mb-3 tracking-wide">Buat Akun Baru</h2>
+                            <p class="text-gray-300 text-base font-medium">Bergabung dengan jutaan pengguna DANA</p>
                         </div>
-                        <div>
-                            <label for="register-pin" class="text-sm font-medium text-indigo-200">PIN Transaksi (6 digit)</label>
-                            <input type="password" id="register-pin" required pattern="\d{6}" maxlength="6" class="w-full p-3 mt-1 bg-gray-800/50 border-2 border-indigo-700 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:outline-none" placeholder="••••••">
+
+                        <form id="register-form" class="space-y-6">
+                            <div class="space-y-2">
+                                <label for="register-username" class="text-sm font-semibold text-gray-200 tracking-wide">Nama Lengkap</label>
+                                <input type="text" id="register-username" required 
+                                       class="w-full p-4 input-field rounded-2xl text-white placeholder-gray-400 focus:outline-none font-medium" 
+                                       placeholder="Masukkan nama lengkap">
+                            </div>
+                            <div class="space-y-2">
+                                <label for="register-phone" class="text-sm font-semibold text-gray-200 tracking-wide">Nomor Telepon</label>
+                                <input type="tel" id="register-phone" required 
+                                       class="w-full p-4 input-field rounded-2xl text-white placeholder-gray-400 focus:outline-none font-medium" 
+                                       placeholder="Masukkan nomor telepon">
+                            </div>
+                            <div class="space-y-2">
+                                <label for="register-password" class="text-sm font-semibold text-gray-200 tracking-wide">Password</label>
+                                <input type="password" id="register-password" required 
+                                       class="w-full p-4 input-field rounded-2xl text-white placeholder-gray-400 focus:outline-none font-medium" 
+                                       placeholder="Minimal 6 karakter">
+                            </div>
+                            <div class="space-y-2">
+                                <label for="register-pin" class="text-sm font-semibold text-gray-200 tracking-wide">PIN Transaksi</label>
+                                <input type="password" id="register-pin" required pattern="\d{6}" maxlength="6" 
+                                       class="w-full p-4 input-field rounded-2xl text-white placeholder-gray-400 focus:outline-none font-medium" 
+                                       placeholder="6 digit angka">
+                            </div>
+                            <button type="submit" 
+                                    class="w-full btn-secondary text-white font-bold py-5 px-6 rounded-2xl smooth-transition text-lg tracking-wide relative z-10">
+                                Daftar Sekarang
+                            </button>
+                        </form>
+
+                        <div class="mt-8 text-center">
+                            <p class="text-gray-300 text-base">
+                                Sudah punya akun? 
+                                <button id="show-login-btn" class="font-bold text-blue-400 hover:text-blue-300 smooth-transition ml-1">
+                                    Masuk di sini
+                                </button>
+                            </p>
                         </div>
-                        <button type="submit" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 px-4 rounded-lg smooth-transition shadow-lg">
-                            Daftar
-                        </button>
-                    </form>
-                    <p class="text-center text-sm text-gray-400 mt-6">
-                        Sudah punya akun? 
-                        <button id="show-login-btn" class="font-semibold text-cyan-400 hover:underline">Masuk di sini</button>
-                    </p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Notification Modal -->
+    <!-- Enhanced Notification Modal -->
     <div id="notification-modal" class="fixed top-8 left-1/2 -translate-x-1/2 z-50 hidden">
-        <div id="notification-card" class="p-4 rounded-lg text-white font-semibold shadow-2xl min-w-[250px] text-center">
+        <div id="notification-card" class="p-6 rounded-2xl text-white font-semibold shadow-2xl min-w-[300px] text-center backdrop-blur-lg border border-white/10">
             <p id="notification-message"></p>
         </div>
     </div>
 
-    <!-- ===== SCRIPT APLIKASI ===== -->
+    <!-- ===== JAVASCRIPT ===== -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // GANTI INI DENGAN KONFIGURASI FIREBASE MILIK ANDA YANG ASLI
+        // Firebase Configuration
         const firebaseConfig = {
           apiKey: "AIzaSyBv31cJC19pEpa6EpamkgaexRdpN0425TKsY",
           authDomain: "imammulmu322.firebaseapp.com",
@@ -155,76 +563,101 @@
           appId: "1:1048023716109:web:e467f867fdd9104ed518b4"
         };
         
-        // --- Inisialisasi Firebase ---
         let db, auth;
 
         const showNotification = (message, isError = false) => {
             const notifModal = document.getElementById('notification-modal');
             const notifCard = document.getElementById('notification-card');
             const notifMessage = document.getElementById('notification-message');
+            
             notifMessage.innerText = message;
-            notifCard.className = `p-4 rounded-lg text-white font-semibold shadow-2xl min-w-[250px] text-center ${isError ? 'bg-red-500' : 'bg-green-500'}`;
-            notifModal.style.display = 'flex';
-            setTimeout(() => { notifModal.style.display = 'none'; }, 3000);
+            notifCard.className = `p-6 rounded-2xl text-white font-semibold shadow-2xl min-w-[300px] text-center backdrop-blur-lg border border-white/10 ${
+                isError ? 'bg-red-500/90' : 'bg-green-500/90'
+            }`;
+            
+            notifModal.classList.remove('hidden');
+            setTimeout(() => { 
+                notifModal.classList.add('hidden'); 
+            }, 4000);
         };
 
-        // --- Fungsi Autentikasi ---
         const handleRegister = async (e) => {
             e.preventDefault();
-            const username = document.getElementById('register-username').value;
-            const phone = document.getElementById('register-phone').value;
+            const username = document.getElementById('register-username').value.trim();
+            const phone = document.getElementById('register-phone').value.trim();
             const password = document.getElementById('register-password').value;
             const pin = document.getElementById('register-pin').value;
             
-            if (pin.length !== 6) { 
+            if (pin.length !== 6 || !/^\d{6}$/.test(pin)) { 
                 showNotification("PIN harus 6 digit angka.", true); 
                 return; 
             }
             
-            const userRef = doc(db, "users", phone);
-            const docSnap = await getDoc(userRef);
+            if (password.length < 6) {
+                showNotification("Password minimal 6 karakter.", true);
+                return;
+            }
             
-            if (docSnap.exists()) { 
-                showNotification("Nomor telepon sudah terdaftar.", true);
-            } else {
-                await setDoc(userRef, { 
-                    username, 
-                    password, 
-                    pin, 
-                    balance: 0, 
-                    createdAt: serverTimestamp() 
-                });
-                showNotification("Pendaftaran berhasil! Silakan login.");
-                document.getElementById('show-login-btn').click();
-                e.target.reset();
+            try {
+                const userRef = doc(db, "users", phone);
+                const docSnap = await getDoc(userRef);
+                
+                if (docSnap.exists()) { 
+                    showNotification("Nomor telepon sudah terdaftar.", true);
+                } else {
+                    await setDoc(userRef, { 
+                        username, 
+                        password, 
+                        pin, 
+                        balance: 0, 
+                        createdAt: serverTimestamp() 
+                    });
+                    showNotification("Pendaftaran berhasil! Silakan login.");
+                    setTimeout(() => {
+                        document.getElementById('show-login-btn').click();
+                        e.target.reset();
+                    }, 2000);
+                }
+            } catch (error) {
+                showNotification("Terjadi kesalahan. Coba lagi.", true);
+                console.error("Registration error:", error);
             }
         };
 
         const handleLogin = async (e) => {
             e.preventDefault();
-            const phone = document.getElementById('login-phone').value;
+            const phone = document.getElementById('login-phone').value.trim();
             const password = document.getElementById('login-password').value;
             
-            const userRef = doc(db, "users", phone);
-            const docSnap = await getDoc(userRef);
+            if (!phone || !password) {
+                showNotification("Harap isi semua field.", true);
+                return;
+            }
             
-            if (docSnap.exists()) {
-                const userData = docSnap.data();
-                if (userData.password === password) {
-                    showNotification(`Selamat datang, ${userData.username}!`);
-                    // Redirect ke main.html dengan parameter phone
-                    setTimeout(() => {
-                        window.location.href = `main.html?phone=${phone}`;
-                    }, 1500);
+            try {
+                const userRef = doc(db, "users", phone);
+                const docSnap = await getDoc(userRef);
+                
+                if (docSnap.exists()) {
+                    const userData = docSnap.data();
+                    if (userData.password === password) {
+                        showNotification(`Selamat datang, ${userData.username}!`);
+                        setTimeout(() => {
+                            window.location.href = `main.html?phone=${phone}`;
+                        }, 2500);
+                    } else { 
+                        showNotification("Password salah.", true); 
+                    }
                 } else { 
-                    showNotification("Password salah.", true); 
+                    showNotification("Nomor telepon tidak terdaftar.", true); 
                 }
-            } else { 
-                showNotification("Nomor telepon tidak ditemukan.", true); 
+            } catch (error) {
+                showNotification("Terjadi kesalahan. Coba lagi.", true);
+                console.error("Login error:", error);
             }
         };
 
-        // --- Inisialisasi Event Listeners ---
+        // Initialize App
         document.addEventListener('DOMContentLoaded', () => {
             try {
                 const app = initializeApp(firebaseConfig);
@@ -232,10 +665,11 @@
                 auth = getAuth(app);
                 signInAnonymously(auth);
             } catch (e) { 
-                console.error("Gagal konek Firebase:", e); 
-                alert("Gagal terhubung ke Firebase. Cek konfigurasi."); 
+                console.error("Firebase connection failed:", e); 
+                showNotification("Gagal terhubung ke server.", true);
             }
 
+            // Event Listeners
             document.getElementById('show-register-btn').addEventListener('click', () => {
                 document.getElementById('login-view').classList.add('hidden');
                 document.getElementById('register-view').classList.remove('hidden');
