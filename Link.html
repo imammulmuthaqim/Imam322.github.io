@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
     <style>
         body { 
             font-family: 'Inter', sans-serif; 
@@ -102,16 +103,19 @@
 
     <div class="container mx-auto px-4 py-8 relative z-10 max-w-7xl">
         <header class="mb-8 text-center relative">
-            <a href="index.html" class="absolute left-0 top-1/2 -translate-y-1/2 glass-card p-3 rounded-full hover:bg-white/10 smooth-transition" title="Kembali ke Home">
+            <button id="back-btn" class="absolute left-0 top-1/2 -translate-y-1/2 glass-card p-3 rounded-full hover:bg-white/10 smooth-transition" title="Kembali ke Main">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
-            </a>
+            </button>
             <h1 class="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Link Manager</h1>
             <p class="text-gray-400 mt-2">Kelola semua link penting Anda</p>
+            <div class="mt-4 glass-card inline-block px-4 py-2 rounded-lg">
+                <p class="text-sm text-gray-300">Saldo Anda: <span id="user-balance" class="font-bold text-cyan-300">Rp 0</span></p>
+            </div>
         </header>
         
-        <!-- Kategori (Layout diubah menjadi 2x2 pada layar medium) -->
+        <!-- Kategori -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <!-- APK Card -->
             <div class="glass-card category-card p-6">
@@ -140,7 +144,7 @@
                 <div id="root-links" class="space-y-3 min-h-[100px]"></div>
             </div>
 
-            <!-- KATEGORI BARU: Link Access -->
+            <!-- Link Access Card -->
             <div class="glass-card category-card p-6">
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-xl font-bold text-indigo-300">Link Access</h2>
@@ -151,7 +155,28 @@
         </div>
     </div>
 
-    <!-- Modal Create Link (Tidak ada perubahan) -->
+    <!-- Modal Admin Key -->
+    <div id="adminKeyModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-6 rounded-2xl shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">Akses Admin</h3>
+                <button id="closeAdminKeyBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <form id="adminKeyForm" class="space-y-4">
+                <div>
+                    <label for="adminKeyInput" class="block text-sm font-medium text-gray-300 mb-1">Masukkan Kunci Admin</label>
+                    <input type="password" id="adminKeyInput" required class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:border-transparent placeholder-gray-500" placeholder="Kunci admin...">
+                    <p id="adminKeyError" class="text-red-400 text-xs mt-1 hidden">Kunci admin salah!</p>
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button type="button" id="cancelAdminBtn" class="flex-1 px-4 py-3 bg-gray-600/50 hover:bg-gray-600 rounded-lg font-medium smooth-transition">Batal</button>
+                    <button type="submit" class="flex-1 px-4 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 rounded-lg font-medium smooth-transition">Verifikasi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Create Link -->
     <div id="createModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
         <div class="glass-card w-full max-w-md p-6 rounded-2xl shadow-2xl">
             <div class="flex justify-between items-center mb-4">
@@ -190,12 +215,37 @@
         </div>
     </div>
 
+    <!-- Modal Purchase Confirmation -->
+    <div id="purchaseModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-6 rounded-2xl shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">Konfirmasi Pembelian</h3>
+                <button id="closePurchaseBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div class="space-y-4">
+                <div class="bg-gray-800/30 p-4 rounded-lg">
+                    <h4 id="purchaseTitle" class="font-bold text-lg mb-2"></h4>
+                    <p id="purchaseDesc" class="text-gray-300 text-sm mb-3"></p>
+                    <p class="text-cyan-300 font-bold text-xl">Harga: <span id="purchasePrice"></span></p>
+                </div>
+                <div class="bg-yellow-500/10 border border-yellow-500/30 p-3 rounded-lg">
+                    <p class="text-yellow-300 text-sm">⚠️ Setelah pembelian, link akan menjadi milik Anda selamanya dan dapat diakses kapan saja.</p>
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button type="button" id="cancelPurchaseBtn" class="flex-1 px-4 py-3 bg-gray-600/50 hover:bg-gray-600 rounded-lg font-medium smooth-transition">Batal</button>
+                    <button type="button" id="confirmPurchaseBtn" class="flex-1 px-4 py-3 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 rounded-lg font-medium smooth-transition">Beli Sekarang</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="modalBackdrop" class="fixed inset-0 bg-black/60 z-40 hidden"></div>
     <div id="notificationToast" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 px-6 py-3 rounded-lg shadow-lg hidden">
         <p id="notificationMessage"></p>
     </div>
 
     <script>
+        // Firebase Config
         const firebaseConfig = {
           apiKey: "AIzaSyBArGWSK3nwgfcvWEY4LI51a2ORoam8jRU",
           authDomain: "linkked-fc2ba.firebaseapp.com",
@@ -206,16 +256,69 @@
           appId: "1:797884835407:web:97088b7afab1ad1b9bac3a"
         };
 
+        // Firebase untuk main.html (Firestore)
+        const mainFirebaseConfig = {
+          apiKey: "AIzaSyBv31cJC19pEpa6EpamkgaexRdpN0425TKsY",
+          authDomain: "imammulmu322.firebaseapp.com",
+          projectId: "imammulmu322",
+          storageBucket: "imammulmu322.appspot.com",
+          messagingSenderId: "1048023716109",
+          appId: "1:1048023716109:web:e467f867fdd9104ed518b4"
+        };
+
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
+        
+        // Initialize Firestore for user balance
+        const mainApp = firebase.initializeApp(mainFirebaseConfig, 'mainApp');
+        const firestore = firebase.firestore(mainApp);
 
+        // Global variables
+        let currentUser = null;
+        let userBalance = 0;
+        let isAdmin = false;
+        let currentPurchaseItem = null;
+
+        // DOM elements
         const createModal = document.getElementById('createModal');
+        const adminKeyModal = document.getElementById('adminKeyModal');
+        const purchaseModal = document.getElementById('purchaseModal');
         const modalBackdrop = document.getElementById('modalBackdrop');
         const linkForm = document.getElementById('linkForm');
+        const adminKeyForm = document.getElementById('adminKeyForm');
         const saveBtn = document.getElementById('saveBtn');
         const saveBtnText = document.getElementById('saveBtnText');
         const notificationToast = document.getElementById('notificationToast');
         const notificationMessage = document.getElementById('notificationMessage');
+
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const userPhone = urlParams.get('phone');
+        const userBalanceParam = urlParams.get('balance');
+
+        // Initialize user data
+        if (userPhone) {
+            currentUser = { phoneNumber: userPhone };
+            userBalance = parseInt(userBalanceParam) || 0;
+            document.getElementById('user-balance').textContent = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(userBalance);
+        }
+
+        // Back button functionality
+        document.getElementById('back-btn').addEventListener('click', () => {
+            if (userPhone) {
+                window.location.href = `main.html?phone=${userPhone}`;
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        function showAdminKeyModal(category) {
+            document.getElementById('categoryInput').value = category;
+            document.getElementById('adminKeyError').classList.add('hidden');
+            adminKeyModal.style.display = 'flex';
+            modalBackdrop.style.display = 'block';
+            setTimeout(() => { document.getElementById('adminKeyInput').focus(); }, 100);
+        }
 
         function showCreateModal(category) {
             document.getElementById('categoryInput').value = category;
@@ -227,9 +330,20 @@
             setTimeout(() => { document.getElementById('titleInput').focus(); }, 100);
         }
 
+        function showPurchaseModal(linkData, linkId, category) {
+            currentPurchaseItem = { ...linkData, id: linkId, category: category };
+            document.getElementById('purchaseTitle').textContent = linkData.title;
+            document.getElementById('purchaseDesc').textContent = linkData.description;
+            document.getElementById('purchasePrice').textContent = `Rp ${parseInt(linkData.price).toLocaleString('id-ID')}`;
+            purchaseModal.style.display = 'flex';
+            modalBackdrop.style.display = 'block';
+        }
+
         function closeModal() {
             modalBackdrop.style.display = 'none';
             createModal.style.display = 'none';
+            adminKeyModal.style.display = 'none';
+            purchaseModal.style.display = 'none';
             resetSaveButton();
         }
 
@@ -259,7 +373,14 @@
             return isValid;
         }
 
-        function isValidUrl(string) { try { new URL(string); return true; } catch (_) { return false; } }
+        function isValidUrl(string) { 
+            try { 
+                new URL(string); 
+                return true; 
+            } catch (_) { 
+                return false; 
+            } 
+        }
 
         function saveLink() {
             if (!validateForm()) return;
@@ -276,7 +397,8 @@
                 description: description,
                 url: url,
                 price: price,
-                createdAt: new Date().toISOString()
+                createdAt: new Date().toISOString(),
+                available: true
             }).then(() => {
                 showNotification('Link berhasil disimpan!', 'success');
                 closeModal();
@@ -287,6 +409,71 @@
             }).finally(() => {
                 resetSaveButton();
             });
+        }
+
+        async function purchaseLink() {
+            if (!currentPurchaseItem || !currentUser) {
+                showNotification('Data pembelian tidak valid!', 'error');
+                return;
+            }
+
+            const price = parseInt(currentPurchaseItem.price);
+            if (userBalance < price) {
+                showNotification('Saldo tidak mencukupi!', 'error');
+                return;
+            }
+
+            try {
+                // Update user balance in Firestore
+                const userRef = firestore.collection('users').doc(currentUser.phoneNumber);
+                const newBalance = userBalance - price;
+                
+                await firestore.runTransaction(async (transaction) => {
+                    const userDoc = await transaction.get(userRef);
+                    if (!userDoc.exists) {
+                        throw new Error('User tidak ditemukan');
+                    }
+                    
+                    // Update balance
+                    transaction.update(userRef, { balance: newBalance });
+                    
+                    // Add purchase history
+                    const historyRef = firestore.collection('users').doc(currentUser.phoneNumber).collection('history').doc();
+                    transaction.set(historyRef, {
+                        type: 'BELI_LINK',
+                        amount: price,
+                        linkTitle: currentPurchaseItem.title,
+                        linkUrl: currentPurchaseItem.url,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                        transactionId: `LINK-${Date.now()}`
+                    });
+                });
+
+                // Mark link as sold in Realtime Database
+                await database.ref(`links/${currentPurchaseItem.category}/${currentPurchaseItem.id}`).update({
+                    available: false,
+                    soldTo: currentUser.phoneNumber,
+                    soldAt: new Date().toISOString()
+                });
+
+                // Add to user's purchased links
+                await database.ref(`userLinks/${currentUser.phoneNumber}/${currentPurchaseItem.id}`).set({
+                    ...currentPurchaseItem,
+                    purchasedAt: new Date().toISOString()
+                });
+
+                // Update local balance
+                userBalance = newBalance;
+                document.getElementById('user-balance').textContent = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(userBalance);
+
+                showNotification('Pembelian berhasil! Link sekarang milik Anda.', 'success');
+                closeModal();
+                loadLinks(currentPurchaseItem.category);
+                
+            } catch (error) {
+                console.error('Error purchasing link:', error);
+                showNotification('Gagal melakukan pembelian: ' + error.message, 'error');
+            }
         }
 
         function showLoadingState() {
@@ -309,20 +496,40 @@
                     linksContainer.innerHTML = '<p class="text-center text-gray-400 py-4">Belum ada link</p>';
                     return;
                 }
+                
                 snapshot.forEach((childSnapshot) => {
                     const link = childSnapshot.val();
+                    const linkId = childSnapshot.key;
                     const linkElement = document.createElement('div');
                     linkElement.className = 'link-item glass-card p-4 rounded-lg';
+                    
+                    const isOwned = link.soldTo === currentUser?.phoneNumber;
+                    const isAvailable = link.available !== false;
+                    
+                    let actionButton = '';
+                    if (isOwned) {
+                        actionButton = `<a href="${link.url}" target="_blank" class="text-sm bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-white">Akses Link</a>`;
+                    } else if (isAvailable && currentUser) {
+                        actionButton = `<button onclick="showPurchaseModal(${JSON.stringify(link).replace(/"/g, '&quot;')}, '${linkId}', '${category}')" class="text-sm bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white">Beli</button>`;
+                    } else if (!isAvailable) {
+                        actionButton = `<span class="text-sm bg-gray-600 px-3 py-1 rounded text-gray-300">Terjual</span>`;
+                    } else {
+                        actionButton = `<span class="text-sm bg-gray-600 px-3 py-1 rounded text-gray-300">Login untuk Beli</span>`;
+                    }
+                    
                     linkElement.innerHTML = `
                         <div class="flex justify-between items-start">
-                            <div>
+                            <div class="flex-1">
                                 <h3 class="font-bold text-lg">${link.title}</h3>
                                 <p class="text-gray-400 text-sm mt-1">${link.description.substring(0, 60)}${link.description.length > 60 ? '...' : ''}</p>
+                                ${isOwned ? '<p class="text-green-400 text-xs mt-1">✓ Anda memiliki link ini</p>' : ''}
                             </div>
-                            <span class="bg-gray-700/50 text-cyan-300 px-3 py-1 rounded-full text-sm font-medium">Rp${link.price}</span>
+                            <div class="text-right ml-4">
+                                <span class="bg-gray-700/50 text-cyan-300 px-3 py-1 rounded-full text-sm font-medium block mb-2">Rp${parseInt(link.price).toLocaleString('id-ID')}</span>
+                                ${actionButton}
+                            </div>
                         </div>
                         <div class="mt-3 flex justify-between items-center">
-                            <a href="${link.url}" target="_blank" class="text-sm text-blue-400 hover:underline">Buka Link</a>
                             <span class="text-xs text-gray-500">${formatDate(link.createdAt)}</span>
                         </div>
                     `;
@@ -338,29 +545,54 @@
             setTimeout(() => { notificationToast.classList.add('hidden'); }, 3000);
         }
 
-        function capitalizeFirstLetter(string) { return string.charAt(0).toUpperCase() + string.slice(1); }
-        function formatDate(dateString) { return new Date(dateString).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' }); }
+        function capitalizeFirstLetter(string) { 
+            return string.charAt(0).toUpperCase() + string.slice(1); 
+        }
+        
+        function formatDate(dateString) { 
+            return new Date(dateString).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' }); 
+        }
 
+        // Event Listeners
         document.addEventListener('DOMContentLoaded', function() {
             // Load initial data for all categories
             loadLinks('apk');
             loadLinks('module');
             loadLinks('root');
-            loadLinks('linkaccess'); // Memuat kategori baru
+            loadLinks('linkaccess');
 
-            // Add button event listeners
-            document.getElementById('add-apk-btn').addEventListener('click', () => showCreateModal('apk'));
-            document.getElementById('add-module-btn').addEventListener('click', () => showCreateModal('module'));
-            document.getElementById('add-root-btn').addEventListener('click', () => showCreateModal('root'));
-            document.getElementById('add-linkaccess-btn').addEventListener('click', () => showCreateModal('linkaccess')); // Event listener untuk tombol baru
+            // Add button event listeners - require admin key
+            document.getElementById('add-apk-btn').addEventListener('click', () => showAdminKeyModal('apk'));
+            document.getElementById('add-module-btn').addEventListener('click', () => showAdminKeyModal('module'));
+            document.getElementById('add-root-btn').addEventListener('click', () => showAdminKeyModal('root'));
+            document.getElementById('add-linkaccess-btn').addEventListener('click', () => showAdminKeyModal('linkaccess'));
             
             // Modal event listeners
             document.getElementById('closeModalBtn').addEventListener('click', closeModal);
             document.getElementById('cancelBtn').addEventListener('click', closeModal);
+            document.getElementById('closeAdminKeyBtn').addEventListener('click', closeModal);
+            document.getElementById('cancelAdminBtn').addEventListener('click', closeModal);
+            document.getElementById('closePurchaseBtn').addEventListener('click', closeModal);
+            document.getElementById('cancelPurchaseBtn').addEventListener('click', closeModal);
             modalBackdrop.addEventListener('click', closeModal);
             
-            // Form submission
+            // Form submissions
             linkForm.addEventListener('submit', (e) => { e.preventDefault(); saveLink(); });
+            
+            adminKeyForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const key = document.getElementById('adminKeyInput').value;
+                if (key === '10122006') {
+                    isAdmin = true;
+                    const category = document.getElementById('categoryInput').value;
+                    closeModal();
+                    showCreateModal(category);
+                } else {
+                    document.getElementById('adminKeyError').classList.remove('hidden');
+                }
+            });
+
+            document.getElementById('confirmPurchaseBtn').addEventListener('click', purchaseLink);
         });
     </script>
 </body>
