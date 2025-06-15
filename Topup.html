@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Top Up Saldo - Dompet Digital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            -webkit-font-smoothing: antialiased; 
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.05); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+        }
+        .smooth-transition { transition: all 0.3s ease-in-out; }
+        .payment-method-card {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .payment-method-card:hover {
+            border-color: #06b6d4;
+            transform: translateY(-2px);
+        }
+        .payment-method-card.selected {
+            border-color: #06b6d4;
+            background: rgba(6, 182, 212, 0.1);
+        }
+        .loading-spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid #06b6d4;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .success-animation {
+            animation: successPulse 0.6s ease-in-out;
+        }
+        @keyframes successPulse {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .failed-animation {
+            animation: failedShake 0.6s ease-in-out;
+        }
+        @keyframes failedShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 via-indigo-900 to-purple-900 text-gray-200 min-h-screen">
+    
+    <!-- Header -->
+    <header class="sticky top-0 z-40 glass-card border-b border-white/10">
+        <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+            <button id="back-btn" class="flex items-center space-x-2 text-cyan-300 hover:text-cyan-200 smooth-transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+                <span class="font-semibold">Kembali</span>
+            </button>
+            <h1 class="text-xl font-bold">Top Up Saldo</h1>
+            <div class="w-20"></div> <!-- Spacer for centering -->
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="max-w-4xl mx-auto px-6 py-8">
+        
+        <!-- Step 1: Payment Method Selection -->
+        <div id="step-payment-method" class="space-y-6">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-cyan-300 mb-2">Pilih Metode Deposit</h2>
+                <p class="text-gray-400">Pilih salah satu metode pembayaran di bawah ini</p>
+            </div>
+
+            <div class="grid gap-4">
+                <!-- DANA Option -->
+                <div class="payment-method-card glass-card p-6 rounded-2xl cursor-pointer" data-method="dana" data-name="IMAM MULMUTHAQIM" data-number="081298579022">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center">
+                                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-white">DANA</h3>
+                                <p class="text-sm text-gray-300">IMAM MULMUTHAQIM</p>
+                                <p class="text-xs text-gray-400">081298579022</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="w-6 h-6 border-2 border-gray-400 rounded-full flex items-center justify-center">
+                                <div class="w-3 h-3 bg-cyan-400 rounded-full hidden"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- OVO Option -->
+                <div class="payment-method-card glass-card p-6 rounded-2xl cursor-pointer" data-method="ovo" data-name="IMAM MULMUTHAQIM" data-number="081298579022">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-16 h-16 bg-purple-500 rounded-2xl flex items-center justify-center">
+                                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-white">OVO</h3>
+                                <p class="text-sm text-gray-300">IMAM MULMUTHAQIM</p>
+                                <p class="text-xs text-gray-400">081298579022</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="w-6 h-6 border-2 border-gray-400 rounded-full flex items-center justify-center">
+                                <div class="w-3 h-3 bg-cyan-400 rounded-full hidden"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button id="continue-btn" class="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold py-4 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed smooth-transition" disabled>
+                Lanjutkan
+            </button>
+        </div>
+
+        <!-- Step 2: Amount Input -->
+        <div id="step-amount" class="space-y-6 hidden">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-cyan-300 mb-2">Masukkan Nominal</h2>
+                <p class="text-gray-400">Berapa jumlah yang ingin Anda top up?</p>
+            </div>
+
+            <!-- Selected Payment Method Display -->
+            <div id="selected-method-display" class="glass-card p-4 rounded-2xl">
+                <div class="flex items-center space-x-3">
+                    <div id="method-icon" class="w-12 h-12 rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p id="method-name" class="font-semibold text-white"></p>
+                        <p id="method-details" class="text-sm text-gray-400"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Amount Input -->
+            <div class="space-y-4">
+                <label for="amount-input" class="block text-sm font-medium text-gray-300">Nominal Top Up</label>
+                <div class="relative">
+                    <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 font-semibold">Rp</span>
+                    <input type="number" id="amount-input" class="w-full pl-12 pr-4 py-4 bg-gray-800/50 border-2 border-gray-600 rounded-2xl text-white text-lg font-semibold focus:border-cyan-400 focus:outline-none smooth-transition" placeholder="0" min="10000">
+                </div>
+                <p class="text-xs text-gray-500">Minimal top up Rp 10.000</p>
+            </div>
+
+            <!-- Quick Amount Buttons -->
+            <div class="grid grid-cols-3 gap-3">
+                <button class="quick-amount-btn glass-card p-3 rounded-xl text-center hover:border-cyan-400 smooth-transition" data-amount="50000">
+                    <p class="font-semibold">Rp 50.000</p>
+                </button>
+                <button class="quick-amount-btn glass-card p-3 rounded-xl text-center hover:border-cyan-400 smooth-transition" data-amount="100000">
+                    <p class="font-semibold">Rp 100.000</p>
+                </button>
+                <button class="quick-amount-btn glass-card p-3 rounded-xl text-center hover:border-cyan-400 smooth-transition" data-amount="200000">
+                    <p class="font-semibold">Rp 200.000</p>
+                </button>
+            </div>
+
+            <div class="flex gap-4">
+                <button id="back-to-method-btn" class="w-1/3 bg-gray-600/50 text-white font-bold py-4 rounded-2xl smooth-transition">
+                    Kembali
+                </button>
+                <button id="confirm-amount-btn" class="w-2/3 bg-gradient-to-r from-green-500 to-teal-500 text-white font-bold py-4 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed smooth-transition" disabled>
+                    Konfirmasi & Bayar
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 3: Payment Processing -->
+        <div id="step-payment" class="space-y-6 hidden">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-cyan-300 mb-2">Proses Pembayaran</h2>
+                <p class="text-gray-400">Silakan lakukan pembayaran melalui aplikasi</p>
+            </div>
+
+            <!-- Payment Details -->
+            <div class="glass-card p-6 rounded-2xl space-y-4">
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-400">Metode Pembayaran</span>
+                    <span id="payment-method-name" class="font-semibold text-white"></span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-400">Nama Penerima</span>
+                    <span id="payment-recipient-name" class="font-semibold text-white"></span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-400">Nomor</span>
+                    <span id="payment-recipient-number" class="font-semibold text-white"></span>
+                </div>
+                <div class="border-t border-white/10 pt-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400">Total Pembayaran</span>
+                        <span id="payment-total-amount" class="text-2xl font-bold text-cyan-300"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Status -->
+            <div id="payment-status" class="glass-card p-6 rounded-2xl text-center">
+                <div id="payment-loading" class="space-y-4">
+                    <div class="loading-spinner mx-auto"></div>
+                    <p class="text-lg font-semibold">Menunggu Pembayaran...</p>
+                    <p class="text-sm text-gray-400">Silakan buka aplikasi untuk melakukan pembayaran</p>
+                </div>
+                
+                <div id="payment-success" class="space-y-4 hidden">
+                    <div class="success-animation">
+                        <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-xl font-bold text-green-400">Pembayaran Berhasil!</p>
+                    <p class="text-sm text-gray-400">Saldo Anda telah bertambah</p>
+                </div>
+                
+                <div id="payment-failed" class="space-y-4 hidden">
+                    <div class="failed-animation">
+                        <div class="w-20 h-20 bg-red-500 rounded-full flex items-center justify-center mx-auto">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-xl font-bold text-red-400">Pembayaran Gagal!</p>
+                    <p class="text-sm text-gray-400">Silakan coba lagi</p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div id="payment-actions" class="space-y-3">
+                <button id="open-app-btn" class="w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold py-4 rounded-2xl smooth-transition">
+                    Buka Aplikasi <span id="app-name"></span>
+                </button>
+                <button id="cancel-payment-btn" class="w-full bg-gray-600/50 text-white font-bold py-3 rounded-2xl smooth-transition">
+                    Batalkan Pembayaran
+                </button>
+            </div>
+
+            <div id="payment-complete-actions" class="space-y-3 hidden">
+                <button id="back-to-main-btn" class="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold py-4 rounded-2xl smooth-transition">
+                    Kembali ke Beranda
+                </button>
+                <button id="try-again-btn" class="w-full bg-gray-600/50 text-white font-bold py-3 rounded-2xl smooth-transition hidden">
+                    Coba Lagi
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Modal -->
+    <div id="notification-modal" class="fixed top-8 left-1/2 -translate-x-1/2 z-50 hidden">
+        <div id="notification-card" class="p-4 rounded-lg text-white font-semibold shadow-2xl min-w-[250px] text-center">
+            <p id="notification-message"></p>
+        </div>
+    </div>
+
+    <!-- Firebase and App Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, runTransaction, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyBv31cJC19pEpa6EpamkgaexRdpN0425TKsY",
+          authDomain: "imammulmu322.firebaseapp.com",
+          projectId: "imammulmu322",
+          storageBucket: "imammulmu322.appspot.com",
+          messagingSenderId: "1048023716109",
+          appId: "1:1048023716109:web:e467f867fdd9104ed518b4"
+        };
+
+        // Global Variables
+        let db, auth, currentUser = null;
+        let selectedPaymentMethod = null;
+        let topupAmount = 0;
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+        signInAnonymously(auth);
+
+        // Utility Functions
+        const formatCurrency = (amount) => {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(amount);
+        };
+
+        const showNotification = (message, isError = false) => {
+            const notifModal = document.getElementById('notification-modal');
+            const notifCard = document.getElementById('notification-card');
+            const notifMessage = document.getElementById('notification-message');
+            
+            notifMessage.textContent = message;
+            notifCard.className = `p-4 rounded-lg text-white font-semibold shadow-2xl min-w-[250px] text-center ${isError ? 'bg-red-500' : 'bg-green-500'}`;
+            notifModal.classList.remove('hidden');
+            
+            setTimeout(() => {
+                notifModal.classList.add('hidden');
+            }, 3000);
+        };
+
+        const showStep = (stepName) => {
+            document.querySelectorAll('[id^="step-"]').forEach(step => step.classList.add('hidden'));
+            document.getElementById(`step-${stepName}`).classList.remove('hidden');
+        };
+
+        // Step 1: Payment Method Selection
+        const initPaymentMethodSelection = () => {
+            const paymentCards = document.querySelectorAll('.payment-method-card');
+            const continueBtn = document.getElementById('continue-btn');
+
+            paymentCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    // Remove selection from all cards
+                    paymentCards.forEach(c => {
+                        c.classList.remove('selected');
+                        c.querySelector('.w-3').classList.add('hidden');
+                    });
+
+                    // Select current card
+                    card.classList.add('selected');
+                    card.querySelector('.w-3').classList.remove('hidden');
+
+                    // Store selected method
+                    selectedPaymentMethod = {
+                        method: card.dataset.method,
+                        name: card.dataset.name,
+                        number: card.dataset.number
+                    };
+
+                    // Enable continue button
+                    continueBtn.disabled = false;
+                });
+            });
+
+            continueBtn.addEventListener('click', () => {
+                if (selectedPaymentMethod) {
+                    setupAmountStep();
+                    showStep('amount');
+                }
+            });
+        };
+
+        // Step 2: Amount Input
+        const setupAmountStep = () => {
+            const methodIcon = document.getElementById('method-icon');
+            const methodName = document.getElementById('method-name');
+            const methodDetails = document.getElementById('method-details');
+            const amountInput = document.getElementById('amount-input');
+            const confirmBtn = document.getElementById('confirm-amount-btn');
+            const backBtn = document.getElementById('back-to-method-btn');
+
+            // Update selected method display
+            if (selectedPaymentMethod.method === 'dana') {
+                methodIcon.className = 'w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center';
+                methodName.textContent = 'DANA';
+            } else {
+                methodIcon.className = 'w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center';
+                methodName.textContent = 'OVO';
+            }
+            methodDetails.textContent = `${selectedPaymentMethod.name} - ${selectedPaymentMethod.number}`;
+
+            // Amount input validation
+            const validateAmount = () => {
+                const amount = parseInt(amountInput.value) || 0;
+                confirmBtn.disabled = amount < 10000;
+                topupAmount = amount;
+            };
+
+            amountInput.addEventListener('input', validateAmount);
+
+            // Quick amount buttons
+            document.querySelectorAll('.quick-amount-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const amount = parseInt(btn.dataset.amount);
+                    amountInput.value = amount;
+                    validateAmount();
+                });
+            });
+
+            // Navigation buttons
+            backBtn.addEventListener('click', () => showStep('payment-method'));
+            confirmBtn.addEventListener('click', () => {
+                if (topupAmount >= 10000) {
+                    setupPaymentStep();
+                    showStep('payment');
+                }
+            });
+        };
+
+        // Step 3: Payment Processing
+        const setupPaymentStep = () => {
+            const paymentMethodName = document.getElementById('payment-method-name');
+            const paymentRecipientName = document.getElementById('payment-recipient-name');
+            const paymentRecipientNumber = document.getElementById('payment-recipient-number');
+            const paymentTotalAmount = document.getElementById('payment-total-amount');
+            const openAppBtn = document.getElementById('open-app-btn');
+            const cancelBtn = document.getElementById('cancel-payment-btn');
+            const backToMainBtn = document.getElementById('back-to-main-btn');
+            const tryAgainBtn = document.getElementById('try-again-btn');
+            const appName = document.getElementById('app-name');
+
+            // Update payment details
+            paymentMethodName.textContent = selectedPaymentMethod.method.toUpperCase();
+            paymentRecipientName.textContent = selectedPaymentMethod.name;
+            paymentRecipientNumber.textContent = selectedPaymentMethod.number;
+            paymentTotalAmount.textContent = formatCurrency(topupAmount);
+            appName.textContent = selectedPaymentMethod.method.toUpperCase();
+
+            // Open app button
+            openAppBtn.addEventListener('click', () => {
+                if (selectedPaymentMethod.method === 'dana') {
+                    // Simulate opening DANA app
+                    window.open('https://link.dana.id/qr/2u4n8h', '_blank');
+                } else {
+                    // Simulate opening OVO app
+                    window.open('https://ovo.id/app', '_blank');
+                }
+            });
+
+            // Cancel payment
+            cancelBtn.addEventListener('click', () => {
+                showStep('amount');
+            });
+
+            // Back to main
+            backToMainBtn.addEventListener('click', () => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const phoneNumber = urlParams.get('phone');
+                window.location.href = `main.html?phone=${phoneNumber}`;
+            });
+
+            // Try again
+            tryAgainBtn.addEventListener('click', () => {
+                resetPaymentStatus();
+                simulatePayment();
+            });
+
+            // Start payment simulation
+            simulatePayment();
+        };
+
+        const resetPaymentStatus = () => {
+            document.getElementById('payment-loading').classList.remove('hidden');
+            document.getElementById('payment-success').classList.add('hidden');
+            document.getElementById('payment-failed').classList.add('hidden');
+            document.getElementById('payment-actions').classList.remove('hidden');
+            document.getElementById('payment-complete-actions').classList.add('hidden');
+        };
+
+        const simulatePayment = () => {
+            // Simulate payment processing (3 seconds)
+            setTimeout(() => {
+                // 70% success rate
+                const isSuccess = Math.random() > 0.3;
+                
+                document.getElementById('payment-loading').classList.add('hidden');
+                document.getElementById('payment-actions').classList.add('hidden');
+                document.getElementById('payment-complete-actions').classList.remove('hidden');
+
+                if (isSuccess) {
+                    document.getElementById('payment-success').classList.remove('hidden');
+                    processSuccessfulTopup();
+                } else {
+                    document.getElementById('payment-failed').classList.remove('hidden');
+                    document.getElementById('try-again-btn').classList.remove('hidden');
+                }
+            }, 3000);
+        };
+
+        const processSuccessfulTopup = async () => {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const phoneNumber = urlParams.get('phone');
+
+                await runTransaction(db, async (transaction) => {
+                    const userRef = doc(db, "users", phoneNumber);
+                    const userDoc = await transaction.get(userRef);
+                    
+                    if (!userDoc.exists()) {
+                        throw "User not found";
+                    }
+
+                    const userData = userDoc.data();
+                    const newBalance = userData.balance + topupAmount;
+                    
+                    // Update user balance
+                    transaction.update(userRef, { balance: newBalance });
+                    
+                    // Add transaction history
+                    const historyRef = doc(collection(db, "users", phoneNumber, "history"));
+                    transaction.set(historyRef, {
+                        type: 'TOPUP',
+                        amount: topupAmount,
+                        timestamp: serverTimestamp(),
+                        transactionId: `TOPUP-${Date.now()}`,
+                        paymentMethod: selectedPaymentMethod.method.toUpperCase(),
+                        recipientName: selectedPaymentMethod.name,
+                        recipientNumber: selectedPaymentMethod.number
+                    });
+                });
+
+                showNotification('Top up berhasil! Saldo Anda telah bertambah.');
+            } catch (error) {
+                console.error('Error processing topup:', error);
+                showNotification('Terjadi kesalahan saat memproses top up.', true);
+            }
+        };
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if user phone number is provided
+            const urlParams = new URLSearchParams(window.location.search);
+            const phoneNumber = urlParams.get('phone');
+            
+            if (!phoneNumber) {
+                showNotification('Akses tidak valid. Silakan login kembali.', true);
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+                return;
+            }
+
+            // Back button
+            document.getElementById('back-btn').addEventListener('click', () => {
+                window.location.href = `main.html?phone=${phoneNumber}`;
+            });
+
+            // Initialize payment method selection
+            initPaymentMethodSelection();
+        });
+    </script>
+</body>
+</html>
