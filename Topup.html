@@ -61,6 +61,13 @@
             25% { transform: translateX(-10px); }
             75% { transform: translateX(10px); }
         }
+        .notification-dot {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-gray-900 via-indigo-900 to-purple-900 text-gray-200 min-h-screen">
@@ -75,7 +82,17 @@
                 <span class="font-semibold">Kembali</span>
             </button>
             <h1 class="text-xl font-bold">Top Up Saldo</h1>
-            <div class="w-20"></div> <!-- Spacer for centering -->
+            
+            <!-- Admin Dashboard Button -->
+            <div class="relative">
+                <button id="admin-btn" class="relative p-2 bg-gray-700/50 hover:bg-gray-600/50 rounded-xl smooth-transition">
+                    <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                    <!-- Notification Dot -->
+                    <div id="notification-dot" class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full notification-dot hidden"></div>
+                </button>
+            </div>
         </div>
     </header>
 
@@ -200,8 +217,8 @@
         <!-- Step 3: Payment Processing -->
         <div id="step-payment" class="space-y-6 hidden">
             <div class="text-center mb-8">
-                <h2 class="text-2xl font-bold text-cyan-300 mb-2">Proses Pembayaran</h2>
-                <p class="text-gray-400">Silakan lakukan pembayaran melalui aplikasi</p>
+                <h2 class="text-2xl font-bold text-cyan-300 mb-2">Menunggu Persetujuan</h2>
+                <p class="text-gray-400">Permintaan top up Anda sedang diproses</p>
             </div>
 
             <!-- Payment Details -->
@@ -228,13 +245,22 @@
 
             <!-- Payment Status -->
             <div id="payment-status" class="glass-card p-6 rounded-2xl text-center">
-                <div id="payment-loading" class="space-y-4">
-                    <div class="loading-spinner mx-auto"></div>
-                    <p class="text-lg font-semibold">Menunggu Pembayaran...</p>
-                    <p class="text-sm text-gray-400">Silakan buka aplikasi untuk melakukan pembayaran</p>
+                <div id="payment-pending" class="space-y-4">
+                    <div class="w-20 h-20 bg-yellow-500 rounded-full flex items-center justify-center mx-auto">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <p class="text-xl font-bold text-yellow-400">Menunggu Persetujuan Admin</p>
+                    <p class="text-sm text-gray-400">Silakan transfer ke rekening yang tertera, lalu tunggu konfirmasi admin</p>
+                    <div class="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-4 mt-4">
+                        <p class="text-sm text-yellow-300">
+                            <strong>Penting:</strong> Lakukan pembayaran terlebih dahulu, kemudian admin akan memverifikasi dan menyetujui top up Anda.
+                        </p>
+                    </div>
                 </div>
                 
-                <div id="payment-success" class="space-y-4 hidden">
+                <div id="payment-approved" class="space-y-4 hidden">
                     <div class="success-animation">
                         <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto">
                             <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -242,11 +268,11 @@
                             </svg>
                         </div>
                     </div>
-                    <p class="text-xl font-bold text-green-400">Pembayaran Berhasil!</p>
+                    <p class="text-xl font-bold text-green-400">Top Up Disetujui!</p>
                     <p class="text-sm text-gray-400">Saldo Anda telah bertambah</p>
                 </div>
                 
-                <div id="payment-failed" class="space-y-4 hidden">
+                <div id="payment-rejected" class="space-y-4 hidden">
                     <div class="failed-animation">
                         <div class="w-20 h-20 bg-red-500 rounded-full flex items-center justify-center mx-auto">
                             <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -254,8 +280,8 @@
                             </svg>
                         </div>
                     </div>
-                    <p class="text-xl font-bold text-red-400">Pembayaran Gagal!</p>
-                    <p class="text-sm text-gray-400">Silakan coba lagi</p>
+                    <p class="text-xl font-bold text-red-400">Top Up Ditolak!</p>
+                    <p class="text-sm text-gray-400">Silakan hubungi admin untuk informasi lebih lanjut</p>
                 </div>
             </div>
 
@@ -265,7 +291,7 @@
                     Buka Aplikasi <span id="app-name"></span>
                 </button>
                 <button id="cancel-payment-btn" class="w-full bg-gray-600/50 text-white font-bold py-3 rounded-2xl smooth-transition">
-                    Batalkan Pembayaran
+                    Batalkan Permintaan
                 </button>
             </div>
 
@@ -273,9 +299,52 @@
                 <button id="back-to-main-btn" class="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold py-4 rounded-2xl smooth-transition">
                     Kembali ke Beranda
                 </button>
-                <button id="try-again-btn" class="w-full bg-gray-600/50 text-white font-bold py-3 rounded-2xl smooth-transition hidden">
-                    Coba Lagi
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="admin-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+        <div class="glass-card p-8 rounded-2xl max-w-md w-full mx-4">
+            <h3 class="text-2xl font-bold text-cyan-300 mb-6 text-center">Admin Login</h3>
+            <div class="space-y-4">
+                <div>
+                    <label for="admin-key" class="block text-sm font-medium text-gray-300 mb-2">Masukkan Kunci Admin</label>
+                    <input type="password" id="admin-key" class="w-full px-4 py-3 bg-gray-800/50 border-2 border-gray-600 rounded-xl text-white focus:border-cyan-400 focus:outline-none smooth-transition" placeholder="Kunci admin">
+                </div>
+                <div class="flex gap-3">
+                    <button id="cancel-admin-btn" class="w-1/2 bg-gray-600/50 text-white font-bold py-3 rounded-xl smooth-transition">
+                        Batal
+                    </button>
+                    <button id="login-admin-btn" class="w-1/2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold py-3 rounded-xl smooth-transition">
+                        Masuk
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard Modal -->
+    <div id="admin-dashboard" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+        <div class="glass-card p-8 rounded-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-cyan-300">Admin Dashboard</h3>
+                <button id="close-dashboard-btn" class="text-gray-400 hover:text-white smooth-transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
                 </button>
+            </div>
+            
+            <div class="space-y-4">
+                <h4 class="text-lg font-semibold text-white">Permintaan Top Up Pending</h4>
+                <div id="pending-requests" class="space-y-3">
+                    <!-- Pending requests will be loaded here -->
+                </div>
+                
+                <div id="no-pending-requests" class="text-center py-8 text-gray-400 hidden">
+                    <p>Tidak ada permintaan top up yang pending</p>
+                </div>
             </div>
         </div>
     </div>
@@ -291,7 +360,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, runTransaction, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, runTransaction, collection, query, where, getDocs, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Firebase Configuration
         const firebaseConfig = {
@@ -307,6 +376,8 @@
         let db, auth, currentUser = null;
         let selectedPaymentMethod = null;
         let topupAmount = 0;
+        let isAdmin = false;
+        const ADMIN_KEY = "10122006";
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
@@ -340,6 +411,137 @@
         const showStep = (stepName) => {
             document.querySelectorAll('[id^="step-"]').forEach(step => step.classList.add('hidden'));
             document.getElementById(`step-${stepName}`).classList.remove('hidden');
+        };
+
+        // Admin Functions
+        const checkPendingRequests = async () => {
+            try {
+                const q = query(collection(db, "topup_requests"), where("status", "==", "pending"));
+                const querySnapshot = await getDocs(q);
+                const hasPending = !querySnapshot.empty;
+                
+                const notificationDot = document.getElementById('notification-dot');
+                if (hasPending) {
+                    notificationDot.classList.remove('hidden');
+                } else {
+                    notificationDot.classList.add('hidden');
+                }
+            } catch (error) {
+                console.error('Error checking pending requests:', error);
+            }
+        };
+
+        const loadPendingRequests = async () => {
+            try {
+                const q = query(collection(db, "topup_requests"), where("status", "==", "pending"));
+                const querySnapshot = await getDocs(q);
+                const pendingContainer = document.getElementById('pending-requests');
+                const noPendingDiv = document.getElementById('no-pending-requests');
+                
+                pendingContainer.innerHTML = '';
+                
+                if (querySnapshot.empty) {
+                    noPendingDiv.classList.remove('hidden');
+                    return;
+                }
+                
+                noPendingDiv.classList.add('hidden');
+                
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const requestElement = createRequestElement(doc.id, data);
+                    pendingContainer.appendChild(requestElement);
+                });
+            } catch (error) {
+                console.error('Error loading pending requests:', error);
+            }
+        };
+
+        const createRequestElement = (requestId, data) => {
+            const div = document.createElement('div');
+            div.className = 'glass-card p-4 rounded-xl';
+            div.innerHTML = `
+                <div class="space-y-3">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="font-semibold text-white">${data.phoneNumber}</p>
+                            <p class="text-sm text-gray-400">${data.paymentMethod} - ${data.recipientName}</p>
+                            <p class="text-xs text-gray-500">${data.recipientNumber}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-lg font-bold text-cyan-300">${formatCurrency(data.amount)}</p>
+                            <p class="text-xs text-gray-400">${new Date(data.timestamp?.toDate()).toLocaleString('id-ID')}</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="approveRequest('${requestId}', '${data.phoneNumber}', ${data.amount})" 
+                                class="flex-1 bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg smooth-transition">
+                            Setujui
+                        </button>
+                        <button onclick="rejectRequest('${requestId}')" 
+                                class="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg smooth-transition">
+                            Tolak
+                        </button>
+                    </div>
+                </div>
+            `;
+            return div;
+        };
+
+        window.approveRequest = async (requestId, phoneNumber, amount) => {
+            try {
+                await runTransaction(db, async (transaction) => {
+                    // Update request status
+                    const requestRef = doc(db, "topup_requests", requestId);
+                    transaction.update(requestRef, { 
+                        status: 'approved',
+                        approvedAt: serverTimestamp()
+                    });
+                    
+                    // Update user balance
+                    const userRef = doc(db, "users", phoneNumber);
+                    const userDoc = await transaction.get(userRef);
+                    
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        const newBalance = userData.balance + amount;
+                        transaction.update(userRef, { balance: newBalance });
+                        
+                        // Add transaction history
+                        const historyRef = doc(collection(db, "users", phoneNumber, "history"));
+                        transaction.set(historyRef, {
+                            type: 'TOPUP',
+                            amount: amount,
+                            timestamp: serverTimestamp(),
+                            transactionId: `TOPUP-${Date.now()}`,
+                            status: 'approved'
+                        });
+                    }
+                });
+                
+                showNotification('Permintaan top up berhasil disetujui!');
+                loadPendingRequests();
+                checkPendingRequests();
+            } catch (error) {
+                console.error('Error approving request:', error);
+                showNotification('Gagal menyetujui permintaan', true);
+            }
+        };
+
+        window.rejectRequest = async (requestId) => {
+            try {
+                await updateDoc(doc(db, "topup_requests", requestId), {
+                    status: 'rejected',
+                    rejectedAt: serverTimestamp()
+                });
+                
+                showNotification('Permintaan top up ditolak');
+                loadPendingRequests();
+                checkPendingRequests();
+            } catch (error) {
+                console.error('Error rejecting request:', error);
+                showNotification('Gagal menolak permintaan', true);
+            }
         };
 
         // Step 1: Payment Method Selection
@@ -420,10 +622,36 @@
             backBtn.addEventListener('click', () => showStep('payment-method'));
             confirmBtn.addEventListener('click', () => {
                 if (topupAmount >= 10000) {
+                    submitTopupRequest();
                     setupPaymentStep();
                     showStep('payment');
                 }
             });
+        };
+
+        // Submit Top Up Request
+        const submitTopupRequest = async () => {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const phoneNumber = urlParams.get('phone');
+                
+                const requestData = {
+                    phoneNumber: phoneNumber,
+                    amount: topupAmount,
+                    paymentMethod: selectedPaymentMethod.method.toUpperCase(),
+                    recipientName: selectedPaymentMethod.name,
+                    recipientNumber: selectedPaymentMethod.number,
+                    status: 'pending',
+                    timestamp: serverTimestamp(),
+                    requestId: `REQ-${Date.now()}`
+                };
+                
+                await setDoc(doc(collection(db, "topup_requests")), requestData);
+                checkPendingRequests();
+            } catch (error) {
+                console.error('Error submitting topup request:', error);
+                showNotification('Gagal mengirim permintaan top up', true);
+            }
         };
 
         // Step 3: Payment Processing
@@ -435,7 +663,6 @@
             const openAppBtn = document.getElementById('open-app-btn');
             const cancelBtn = document.getElementById('cancel-payment-btn');
             const backToMainBtn = document.getElementById('back-to-main-btn');
-            const tryAgainBtn = document.getElementById('try-again-btn');
             const appName = document.getElementById('app-name');
 
             // Update payment details
@@ -448,10 +675,8 @@
             // Open app button
             openAppBtn.addEventListener('click', () => {
                 if (selectedPaymentMethod.method === 'dana') {
-                    // Simulate opening DANA app
                     window.open('https://link.dana.id/qr/2u4n8h', '_blank');
                 } else {
-                    // Simulate opening OVO app
                     window.open('https://ovo.id/app', '_blank');
                 }
             });
@@ -467,82 +692,6 @@
                 const phoneNumber = urlParams.get('phone');
                 window.location.href = `main.html?phone=${phoneNumber}`;
             });
-
-            // Try again
-            tryAgainBtn.addEventListener('click', () => {
-                resetPaymentStatus();
-                simulatePayment();
-            });
-
-            // Start payment simulation
-            simulatePayment();
-        };
-
-        const resetPaymentStatus = () => {
-            document.getElementById('payment-loading').classList.remove('hidden');
-            document.getElementById('payment-success').classList.add('hidden');
-            document.getElementById('payment-failed').classList.add('hidden');
-            document.getElementById('payment-actions').classList.remove('hidden');
-            document.getElementById('payment-complete-actions').classList.add('hidden');
-        };
-
-        const simulatePayment = () => {
-            // Simulate payment processing (3 seconds)
-            setTimeout(() => {
-                // 70% success rate
-                const isSuccess = Math.random() > 0.3;
-                
-                document.getElementById('payment-loading').classList.add('hidden');
-                document.getElementById('payment-actions').classList.add('hidden');
-                document.getElementById('payment-complete-actions').classList.remove('hidden');
-
-                if (isSuccess) {
-                    document.getElementById('payment-success').classList.remove('hidden');
-                    processSuccessfulTopup();
-                } else {
-                    document.getElementById('payment-failed').classList.remove('hidden');
-                    document.getElementById('try-again-btn').classList.remove('hidden');
-                }
-            }, 3000);
-        };
-
-        const processSuccessfulTopup = async () => {
-            try {
-                const urlParams = new URLSearchParams(window.location.search);
-                const phoneNumber = urlParams.get('phone');
-
-                await runTransaction(db, async (transaction) => {
-                    const userRef = doc(db, "users", phoneNumber);
-                    const userDoc = await transaction.get(userRef);
-                    
-                    if (!userDoc.exists()) {
-                        throw "User not found";
-                    }
-
-                    const userData = userDoc.data();
-                    const newBalance = userData.balance + topupAmount;
-                    
-                    // Update user balance
-                    transaction.update(userRef, { balance: newBalance });
-                    
-                    // Add transaction history
-                    const historyRef = doc(collection(db, "users", phoneNumber, "history"));
-                    transaction.set(historyRef, {
-                        type: 'TOPUP',
-                        amount: topupAmount,
-                        timestamp: serverTimestamp(),
-                        transactionId: `TOPUP-${Date.now()}`,
-                        paymentMethod: selectedPaymentMethod.method.toUpperCase(),
-                        recipientName: selectedPaymentMethod.name,
-                        recipientNumber: selectedPaymentMethod.number
-                    });
-                });
-
-                showNotification('Top up berhasil! Saldo Anda telah bertambah.');
-            } catch (error) {
-                console.error('Error processing topup:', error);
-                showNotification('Terjadi kesalahan saat memproses top up.', true);
-            }
         };
 
         // Initialize App
@@ -564,8 +713,40 @@
                 window.location.href = `main.html?phone=${phoneNumber}`;
             });
 
+            // Admin button
+            document.getElementById('admin-btn').addEventListener('click', () => {
+                document.getElementById('admin-modal').classList.remove('hidden');
+            });
+
+            // Admin modal handlers
+            document.getElementById('cancel-admin-btn').addEventListener('click', () => {
+                document.getElementById('admin-modal').classList.add('hidden');
+                document.getElementById('admin-key').value = '';
+            });
+
+            document.getElementById('login-admin-btn').addEventListener('click', () => {
+                const key = document.getElementById('admin-key').value;
+                if (key === ADMIN_KEY) {
+                    isAdmin = true;
+                    document.getElementById('admin-modal').classList.add('hidden');
+                    document.getElementById('admin-dashboard').classList.remove('hidden');
+                    loadPendingRequests();
+                } else {
+                    showNotification('Kunci admin salah!', true);
+                }
+                document.getElementById('admin-key').value = '';
+            });
+
+            document.getElementById('close-dashboard-btn').addEventListener('click', () => {
+                document.getElementById('admin-dashboard').classList.add('hidden');
+            });
+
             // Initialize payment method selection
             initPaymentMethodSelection();
+            
+            // Check for pending requests periodically
+            checkPendingRequests();
+            setInterval(checkPendingRequests, 30000); // Check every 30 seconds
         });
     </script>
 </body>
